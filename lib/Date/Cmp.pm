@@ -40,7 +40,7 @@ sub datecmp
 
 	return 0 if($left eq $right);
 
-	if((!ref($left)) && (!ref($right)) && ($left =~ /(\d{3,4})$/)) {
+	if((!ref($left)) && (!ref($right)) && ($left =~ /(\d{3,4})$/) && ($left !~ /^bet/i)) {
 		# Simple year test for fast comparison
 		my $yol = $1;
 		if($right =~ /(\d{3,4})$/) {
@@ -52,7 +52,7 @@ sub datecmp
 	}
 
 	if(!ref($left)) {
-		if((!ref($right)) && ($left =~ /(^|[\s\/])\d{4}$/) && ($right =~ /(^|[\s\/,])(\d{4})$/)) {
+		if((!ref($right)) && ($left =~ /(^|[\s\/])\d{4}$/) && ($left !~ /^bet/i) && ($right =~ /(^|[\s\/,])(\d{4})$/)) {
 			my $ryear = $2;
 			$left =~ /(^|[\s\/])(\d{4})$/;
 			my $lyear = $2;
@@ -110,7 +110,7 @@ sub datecmp
 			}
 		}
 
-		if($left =~ /(\d{3,4})/) {
+		if(($left =~ /(\d{3,4})/) && ($left !~ /^bet/i)) {
 			my $start = $1;
 			if($right =~ /(\d{3,4})/) {
 				# e.g. 26 Aug 1744 <=> 1673-02-22T00:00:00
@@ -125,14 +125,14 @@ sub datecmp
 			# e.g. "1802 or 1803"
 			my($start, $end) = ($1, $2);
 			if($start == $end) {
-				$complain->("the years are the same '$left'");
+				$complain->("the years are the same '$left'") if($complain);
 			}
 			$left = $start
 		} elsif(($left =~ /^(\d{3,4})\-(\d{3,4})$/) || ($left =~ /^Bet (\d{3,4})\sand\s(\d{3,4})$/i)) {
 			# Comparing with a date range, e.g. "BET 1830 AND 1832 <=> 1830-02-06"
 			my ($from, $to) = ($1, $2);
 			if($from == $to) {
-				$complain->("from == to, $from");
+				$complain->("from == to, $from") if($complain);
 				$left = $from;
 			} elsif($from > $to) {
 				print STDERR "datecmp(): $from > $to in daterange '$left'\n";
@@ -144,7 +144,7 @@ sub datecmp
 			} else {
 				if(ref($right)) {
 					$right = $right->year();
-				} else {
+				} elsif($right !~ /^\d{4}$/) {
 					my @r = $dfg->parse_datetime({ date => $right, quiet => 1 });
 					if(!defined($r[0])) {
 						if($right =~ /[\s\/](\d{4})$/) {
@@ -242,7 +242,7 @@ sub datecmp
 			# Comparing with a date range
 			my ($from, $to) = ($1, $2);
 			if($from == $to) {
-				$complain->("from == to, $from");
+				$complain->("from == to, $from") if($complain);
 				$right = $from;
 			} elsif($from > $to) {
 				print STDERR "datecmp(): $from > $to in daterange '$right'\n";
