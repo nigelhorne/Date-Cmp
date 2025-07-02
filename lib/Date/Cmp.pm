@@ -1,5 +1,8 @@
 package Date::Cmp;
 
+# Compare two dates. Approximate dates are compared.
+# TODO: handle when only months are known
+
 use strict;
 use warnings;
 
@@ -20,9 +23,6 @@ Version 0.01
 =cut
 
 our $VERSION = '0.01';
-
-# Compare two dates. Approximate dates are compared.
-# TODO: handle when only months are known
 
 =head1 SYNOPSIS
 
@@ -419,5 +419,33 @@ sub datecmp
 
 	return $left <=> $right;
 }
+
+=head1 AUTHOR
+
+Nigel Horne, C<< <njh at nigelhorne.com> >>
+
+=head1 SUPPORT
+
+This module is provided as-is without any warranty.
+
+=head1 LICENCE AND COPYRIGHT
+
+Copyright 2025 Nigel Horne.
+
+Usage is subject to licence terms.
+
+The licence terms of this software are as follows:
+
+=over 4
+
+=item * Personal single user, single computer use: GPL2
+
+=item * All other users (including Commercial, Charity, Educational, Government)
+  must apply in writing for a licence for use from Nigel Horne at the
+  above e-mail.
+
+=back
+
+=cut
 
 1;

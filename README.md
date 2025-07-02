@@ -65,3 +65,24 @@ The function supports a variety of partial or approximate formats including:
 In cases where a date cannot be parsed or compared meaningfully, diagnostic messages
 will be printed to STDERR, and the function may die with an error. Callbacks and
 stack traces are used to help identify parsing issues.
+
+# AUTHOR
+
+Nigel Horne, `<njh at nigelhorne.com>`
+
+# SUPPORT
+
+This module is provided as-is without any warranty.
+
+# LICENCE AND COPYRIGHT
+
+Copyright 2025 Nigel Horne.
+
+Usage is subject to licence terms.
+
+The licence terms of this software are as follows:
+
+- Personal single user, single computer use: GPL2
+- All other users (including Commercial, Charity, Educational, Government)
+  must apply in writing for a licence for use from Nigel Horne at the
+  above e-mail.
