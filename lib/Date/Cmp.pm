@@ -11,7 +11,7 @@ our $dfg = DateTime::Format::Genealogy->new();
 
 =head1 NAME
 
-Date::Cmp - Compare two dates
+Date::Cmp - Compare two dates with approximate parsing support
 
 =head1 VERSION
 
@@ -23,6 +23,88 @@ our $VERSION = '0.01';
 
 # Compare two dates. Approximate dates are compared.
 # TODO: handle when only months are known
+
+=head1 SYNOPSIS
+
+  use Date::Cmp qw(datecmp);
+
+  my $cmp = datecmp($date1, $date2);
+
+  # Optionally provide a complaint callback:
+  my $cmp = datecmp($date1, $date2, sub { warn @_ });
+
+=head1 DESCRIPTION
+
+This module provides a single function, C<datecmp>, which compares two date strings
+or date-like objects, returning a numeric comparison similar to Perl's spaceship operator (C<< <=> >>).
+
+The comparison is tolerant of approximate dates (e.g. "Abt. 1902", "BET 1830 AND 1832", "Oct/Nov/Dec 1950"),
+partial dates (years only), and strings with common genealogy-style formats. It attempts to normalize
+and parse these into comparable values using L<DateTime::Format::Genealogy>.
+
+=head1 FUNCTIONS
+
+=head2 datecmp
+
+  my $result = datecmp($left, $right);
+  my $result = datecmp($left, $right, \&complain);
+
+Compares two date strings or date-like objects and returns:
+
+=over 4
+
+=item * -1 if C<$left> is earlier than C<$right>
+
+=item * 0 if they are equivalent
+
+=item * 1 if C<$left> is later than C<$right>
+
+=back
+
+Parameters:
+
+=over 4
+
+=item C<$left>, C<$right>
+
+The values to compare. These may be strings in a variety of genealogical or ISO-style formats,
+or blessed objects that implement a C<date()> method returning a date string.
+
+=item C<$complain> (optional)
+
+A coderef that will be called with diagnostic messages when ambiguous or unexpected conditions are encountered,
+e.g. when comparing a range with equal endpoints.
+
+=back
+
+=head1 SUPPORTED FORMATS
+
+The function supports a variety of partial or approximate formats including:
+
+=over 4
+
+=item * Exact dates (e.g. C<1941-08-02>, C<5/27/1872>)
+
+=item * Years only (e.g. C<1828>)
+
+=item * Approximate dates (e.g. C<Abt. 1802>, C<ca. 1802>, C<1802 ?>)
+
+=item * Date ranges (e.g. C<1802-1803>, C<BET 1830 AND 1832>)
+
+=item * Month ranges (e.g. C<Oct/Nov/Dec 1950>)
+
+=item * Qualifiers like C<BEF>, C<AFT>
+
+=back
+
+=head1 ERROR HANDLING
+
+In cases where a date cannot be parsed or compared meaningfully, diagnostic messages
+will be printed to STDERR, and the function may die with an error. Callbacks and
+stack traces are used to help identify parsing issues.
+
+=cut
+
 sub datecmp
 {
 	my ($left, $right, $complain) = @_;
