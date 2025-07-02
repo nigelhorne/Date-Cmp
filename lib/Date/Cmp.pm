@@ -10,6 +10,9 @@ use DateTime::Format::Genealogy;
 use Scalar::Util;
 use Term::ANSIColor;
 
+use Exporter qw(import);
+our @EXPORT_OK = qw(datecmp);
+
 our $dfg = DateTime::Format::Genealogy->new();
 
 =head1 NAME
@@ -134,7 +137,7 @@ sub datecmp
 
 	return 0 if($left eq $right);
 
-	if((!ref($left)) && (!ref($right)) && ($left =~ /(\d{3,4})$/) && ($left !~ /^bet/i)) {
+	if((!ref($left)) && (!ref($right)) && ($left =~ /(\d{3,4})$/) && ($left !~ /^bet/i) && ($right !~ /^bet/i)) {
 		# Simple year test for fast comparison
 		my $yol = $1;
 		if($right =~ /(\d{3,4})$/) {
@@ -146,7 +149,7 @@ sub datecmp
 	}
 
 	if(!ref($left)) {
-		if((!ref($right)) && ($left =~ /(^|[\s\/])\d{4}$/) && ($left !~ /^bet/i) && ($right =~ /(^|[\s\/,])(\d{4})$/)) {
+		if((!ref($right)) && ($left =~ /(^|[\s\/])\d{4}$/) && ($left !~ /^bet/i) && ($right !~ /^bet/i) && ($right =~ /(^|[\s\/,])(\d{4})$/)) {
 			my $ryear = $2;
 			$left =~ /(^|[\s\/])(\d{4})$/;
 			my $lyear = $2;
@@ -204,7 +207,7 @@ sub datecmp
 			}
 		}
 
-		if(($left =~ /(\d{3,4})/) && ($left !~ /^bet/i)) {
+		if(($left =~ /(\d{3,4})/) && ($left !~ /^bet/i) && ($right =~ /^bet/)) {
 			my $start = $1;
 			if($right =~ /(\d{3,4})/) {
 				# e.g. 26 Aug 1744 <=> 1673-02-22T00:00:00
@@ -265,12 +268,16 @@ sub datecmp
 					$right = $r[0]->year();
 				}
 				if($right < $from) {
-					return -1;
-				}
-				if($right > $to) {
 					return 1;
 				}
+				if($right > $to) {
+					return -1;
+				}
 				if($right == $from) {
+					return 0;
+				}
+				if(($right > $from) && ($right < $to)) {
+					# E.g. "BET 1900 AND 1902" <=> 1901
 					return 0;
 				}
 				print STDERR "datecmp(): Can't compare $left with $right\n";
@@ -332,7 +339,7 @@ sub datecmp
 			return $left <=> $right;
 		}
 
-		if($right =~ /^(\d{3,4})\-(\d{3,4})$/) {
+		if(($right =~ /^(\d{3,4})\-(\d{3,4})$/) || ($right =~ /^Bet (\d{3,4})\sand\s(\d{3,4})$/i)) {
 			# Comparing with a date range
 			my ($from, $to) = ($1, $2);
 			if($from == $to) {
@@ -356,6 +363,10 @@ sub datecmp
 					return 1;
 				}
 				if($left == $from) {
+					return 0;
+				}
+				if(($left > $from) && ($left < $to)) {
+					# E.g. 1901 <=> "BET 1900 AND 1902"
 					return 0;
 				}
 				print STDERR "datecmp(): Can't compare $left with $right\n";
