@@ -7,7 +7,8 @@ BEGIN { use_ok('Date::Cmp', qw(datecmp)) };
 
 # A helper to trap errors without crashing the test
 my $trap_errors = sub {
-	my ($code) = @_;
+	my $code = shift;
+
 	my $error;
 	{
 		local $@;

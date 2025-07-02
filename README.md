@@ -10,10 +10,12 @@ Version 0.01
 
     use Date::Cmp qw(datecmp);
 
+    my $date1 = '1914';
+    my $date2 = '1918';
     my $cmp = datecmp($date1, $date2);
 
     # Optionally provide a complaint callback:
-    my $cmp = datecmp($date1, $date2, sub { warn @_ });
+    $cmp = datecmp($date1, $date2, sub { warn @_ });
 
 # DESCRIPTION
 
