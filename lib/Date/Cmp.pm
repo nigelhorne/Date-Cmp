@@ -9,6 +9,18 @@ use Term::ANSIColor;
 
 our $dfg = DateTime::Format::Genealogy->new();
 
+=head1 NAME
+
+Date::Cmp - Compare two dates
+
+=head1 VERSION
+
+Version 0.01
+
+=cut
+
+our $VERSION = '0.01';
+
 # Compare two dates. Approximate dates are compared.
 # TODO: handle when only months are known
 sub datecmp
