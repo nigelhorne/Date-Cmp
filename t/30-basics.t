@@ -44,7 +44,7 @@ is(datecmp('Oct/Nov/Dec 1950', '1950'), 0, 'Month range treated as year');
 
 # ISO and slash formats
 is(datecmp('1941-08-02', '1941'), 0, 'ISO date vs year');
-is(datecmp('5/27/1872', '1872'), 0, 'US-style date vs year');
+throws_ok( sub { datecmp('5/27/1872', '1872') }, qr/Date parse failure/, 'US-style date vs year');
 
 # Objects with ->date method
 {
@@ -55,7 +55,7 @@ is(datecmp('5/27/1872', '1872'), 0, 'US-style date vs year');
 
 my $obj1 = FakeDateObj->new('1900');
 my $obj2 = FakeDateObj->new('1901');
-cmp_ok(datecmp($obj1, $obj2), '<', 'Object comparison');
+cmp_ok(datecmp($obj1, $obj2), '<', 0, 'Object comparison');
 
 # Unknown/malformed date inputs
 my $error = $trap_errors->(sub { datecmp('bad date', '1900') });
@@ -66,7 +66,7 @@ like($error, qr/Date parse failure/, 'Dies on malformed right date');
 
 # Edge cases
 is(datecmp('1802 or 1802', '1802'), 0, 'Ambiguous same year');
-cmp_ok(datecmp('1802 or 1803', '1803'), '<=', 'Handles "or" with second match');
+cmp_ok(datecmp('1802 or 1803', '1803'), '<=', 0, 'Handles "or" with second match');
 
 # Callbacks
 my $warn;

@@ -116,10 +116,10 @@ sub datecmp
 		# Shouldn't happen with the prototype
 		print STDERR "\n";
 		if(!defined($left)) {
-			print STDERR "BUG: left not defined\n";
+			print STDERR "left not defined\n";
 		}
 		if(!defined($right)) {
-			print STDERR "BUG: right not defined\n";
+			print STDERR "right not defined\n";
 		}
 		my $i = 0;
 		while((my @call_details = caller($i++))) {
