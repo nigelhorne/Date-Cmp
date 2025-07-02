@@ -31,10 +31,12 @@ our $VERSION = '0.01';
 
   use Date::Cmp qw(datecmp);
 
+  my $date1 = '1914';
+  my $date2 = '1918';
   my $cmp = datecmp($date1, $date2);
 
   # Optionally provide a complaint callback:
-  my $cmp = datecmp($date1, $date2, sub { warn @_ });
+  $cmp = datecmp($date1, $date2, sub { warn @_ });
 
 =head1 DESCRIPTION
 
@@ -433,6 +435,10 @@ sub datecmp
 =head1 AUTHOR
 
 Nigel Horne, C<< <njh at nigelhorne.com> >>
+
+=head1 SEE ALSO
+
+L<Sort::Key::DateTime>
 
 =head1 SUPPORT
 

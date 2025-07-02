@@ -70,6 +70,10 @@ stack traces are used to help identify parsing issues.
 
 Nigel Horne, `<njh at nigelhorne.com>`
 
+# SEE ALSO
+
+[Sort::Key::DateTime](https://metacpan.org/pod/Sort%3A%3AKey%3A%3ADateTime)
+
 # SUPPORT
 
 This module is provided as-is without any warranty.
