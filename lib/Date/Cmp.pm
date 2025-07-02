@@ -113,7 +113,6 @@ sub datecmp
 	my ($left, $right, $complain) = @_;
 
 	if((!defined($left)) || !defined($right)) {
-		# Shouldn't happen with the prototype
 		print STDERR "\n";
 		if(!defined($left)) {
 			print STDERR "left not defined\n";
