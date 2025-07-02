@@ -1,0 +1,7 @@
+lib/Date/Cmp.pm
+LICENSE
+Makefile.PL
+MANIFEST			This list of files
+MANIFEST.SKIP
+README.md
+t/cmp.t
