@@ -208,13 +208,15 @@ sub datecmp
 			}
 		}
 
-		if(($left =~ /(\d{3,4})/) && ($left !~ /^bet/i) && ($right =~ /^bet/)) {
+		if($left =~ /(\d{3,4})/) {
 			my $start = $1;
-			if($right =~ /(\d{3,4})/) {
-				# e.g. 26 Aug 1744 <=> 1673-02-22T00:00:00
-				my $end = $1;
-				if($start != $end) {
-					return $start <=> $end;
+			if(($left !~ /^bet/i) && ($right =~ /^bet/)) {
+				if($right =~ /(\d{3,4})/) {
+					# e.g. 26 Aug 1744 <=> 1673-02-22T00:00:00
+					my $end = $1;
+					if($start != $end) {
+						return $start <=> $end;
+					}
 				}
 			}
 		}
