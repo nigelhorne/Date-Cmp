@@ -1,5 +1,8 @@
 Revision history for Date::Cmp
 
+0.03
+	use ABSTRACT_FROM
+
 0.02	Thu Jul  3 08:00:42 EDT 2025
 	Use of uninitialized value $start
 
