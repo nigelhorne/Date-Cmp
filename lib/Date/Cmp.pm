@@ -138,6 +138,19 @@ sub datecmp
 
 	return 0 if($left eq $right);
 
+	if((!ref($left)) && (!ref($right)) && ($left =~ /\d{3,4}/) && ($right =~ /\d{3,4}/) && ($left !~ /^bet/i) && ($right !~ /^bet/i)) {
+		if($left =~ /(\d{4})/) {
+			my $lyear = $1;
+			if($right =~ /(\d{4})/) {
+				my $ryear = $1;
+
+				if($lyear != $ryear) {
+					return $lyear <=> $ryear;
+				}
+			}
+		}
+	}
+
 	if((!ref($left)) && (!ref($right)) && ($left =~ /(\d{3,4})$/) && ($left !~ /^bet/i) && ($right !~ /^bet/i)) {
 		# Simple year test for fast comparison
 		my $yol = $1;
