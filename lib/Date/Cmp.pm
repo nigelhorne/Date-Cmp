@@ -21,11 +21,11 @@ Date::Cmp - Compare two dates with approximate parsing support
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 =head1 SYNOPSIS
 
@@ -445,6 +445,16 @@ L<Sort::Key::DateTime>
 =head1 SUPPORT
 
 This module is provided as-is without any warranty.
+
+Please report any bugs or feature requests to C<bug-date-cmp at rt.cpan.org>,
+or through the web interface at
+L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Date-Cmp>.
+I will be notified, and then you'll
+automatically be notified of progress on your bug as I make changes.
+
+You can find documentation for this module with the perldoc command.
+
+    perldoc Date::Cmp
 
 =head1 LICENCE AND COPYRIGHT
 
