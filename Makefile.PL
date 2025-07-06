@@ -21,7 +21,7 @@ WriteMakefile(
 		: ()),
 	PREREQ_PM	=> {						# Dependencies (with versions)
 		'ExtUtils::MakeMaker' => 6.64,	# Minimum version for TEST_REQUIRES
-		'DateTime::Format::Genealogy' => 0,
+		'DateTime::Format::Genealogy' => 0.11,
 		'Scalar::Util' => 0,
 		'Term::ANSIColor' => 0
 	}, TEST_REQUIRES => {

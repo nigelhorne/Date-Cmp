@@ -1,5 +1,9 @@
 Revision history for Date::Cmp
 
+0.04
+	Set the minumum version of DateTime::Format::Genalogy to 0.11 to fix
+		https://www.cpantesters.org/cpan/report/ff105486-6c5d-1014-ac19-ce1abe40bcc7
+
 0.03	Thu Jul  3 10:38:28 EDT 2025
 	use ABSTRACT_FROM
 	Correctly compare 16/11/1689' <=> '1659-07-01'

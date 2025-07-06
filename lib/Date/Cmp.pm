@@ -6,7 +6,7 @@ package Date::Cmp;
 use strict;
 use warnings;
 
-use DateTime::Format::Genealogy;
+use DateTime::Format::Genealogy 0.11;
 use Scalar::Util;
 use Term::ANSIColor;
 
