@@ -13,7 +13,7 @@ if($^O eq 'darwin') {
 
 WriteMakefile(
 	AUTHOR		=> q{Nigel Horne <njh@nigelhorne.com>},
-	NAME	 => 'Date::Cmp',		# Name of the module
+	NAME => 'Date::Cmp',		# Name of the module
 	VERSION_FROM => 'lib/Date/Cmp.pm',	# Automatically fetch version from the module
 	ABSTRACT_FROM	=> 'lib/Date/Cmp.pm',
 	((defined($ExtUtils::MakeMaker::VERSION) && ($ExtUtils::MakeMaker::VERSION >= 6.3002))
@@ -28,9 +28,10 @@ WriteMakefile(
 		'Test::DescribeMe' => 0,
 		'Test::Most' => 0,
 		'Test::Needs' => 0,
+		'Test::Returns' => 0,
 		'Test::Warnings' => 0
 	}, dist => $dist,
-	clean	 => {
+	clean => {
 		FILES => 'Date-Cmp-*',
 	}, META_MERGE => {	# https://perldoc.perl.org/CPAN::Meta::Spec
 		'meta-spec' => { version => 2 },
