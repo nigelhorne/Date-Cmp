@@ -15,6 +15,8 @@ our @EXPORT_OK = qw(datecmp);
 
 our $dfg = DateTime::Format::Genealogy->new();
 
+=encoding utf-8
+
 =head1 NAME
 
 Date::Cmp - Compare two dates with approximate parsing support
