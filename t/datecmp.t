@@ -53,6 +53,7 @@ for my $case (@cases) {
 	is($actual, $expected, "'$left' <=> '$right' => $expected" . ($complaints ? " [warned: $complaints]" : ''));
 
 	# Invert the test
+	$complaints = '';
 	$actual = datecmp($right, $left, sub { $complaints .= "@_\n" });
 
 	returns_is($actual, { 'type' => 'integer', 'min' => -1, 'max' => 1 });
