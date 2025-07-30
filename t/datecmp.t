@@ -48,7 +48,6 @@ for my $case (@cases) {
 	my $complaints = '';
 	my $actual = datecmp($left, $right, sub { $complaints .= "@_\n" });
 
-	# TODO: use the 'memberof' within newer Params::Validate::Schema when that's in the wild
 	returns_is($actual, { 'type' => 'integer', 'min' => -1, 'max' => 1 });
 
 	is($actual, $expected, "'$left' <=> '$right' => $expected" . ($complaints ? " [warned: $complaints]" : ''));
@@ -67,3 +66,4 @@ for my $case (@cases) {
 	is($actual, $expected, "'$left' <=> '$right' => $expected" . ($complaints ? " [warned: $complaints]" : ''));
 }
 
+done_testing();
