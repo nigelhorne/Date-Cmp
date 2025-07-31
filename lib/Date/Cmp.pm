@@ -416,6 +416,11 @@ sub datecmp
 				}
 				return 0;
 			} else {
+				# Comparing with a year only
+				if($left == $to) {
+					# 1832 <=> BET 1830 AND 1832
+					return 0;
+				}
 				if(ref($left)) {
 					$left = $left->year();
 				}
