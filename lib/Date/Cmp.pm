@@ -172,7 +172,7 @@ sub datecmp
 
 	return 0 if($left eq $right);
 
-	if((!ref($left)) && (!ref($right)) && ($left =~ /\d{3,4}/) && ($right =~ /\d{3,4}/) && ($left !~ /^bet/i) && ($left !~ /\-/) && ($right !~ /^bet/i) && ($right !~ /\-/)) {
+	if((!ref($left)) && (!ref($right)) && ($left =~ /\d{3,4}/) && ($right =~ /\d{3,4}/) && ($left !~ /^bet/i) && ($left !~ /\-/) && ($right !~ /^bet/i) && ($right !~ /^\d{3,4}\-\d{3,4}$/)) {
 		if($left =~ /(\d{4})/) {
 			my $lyear = $1;
 			if($right =~ /(\d{4})/) {
