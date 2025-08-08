@@ -23,11 +23,11 @@ Date::Cmp - Compare two dates with approximate parsing support
 
 =head1 VERSION
 
-Version 0.04
+Version 0.05
 
 =cut
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 =head1 SYNOPSIS
 
@@ -46,8 +46,8 @@ This module provides a single function, C<datecmp>, which compares two date stri
 or date-like objects, returning a numeric comparison similar to Perl's spaceship operator (C<< <=> >>).
 
 The comparison is tolerant of approximate dates (e.g., "Abt. 1902", "BET 1830 AND 1832", "Oct/Nov/Dec 1950"),
-partial dates (years only), and strings with common genealogy-style formats. It attempts to normalize
-and parse these into comparable values using L<DateTime::Format::Genealogy>.
+partial dates (years only), and strings with common genealogy-style formats.
+It attempts to normalize and parse these into comparable values using L<DateTime::Format::Genealogy>.
 
 =head1 FUNCTIONS
 
