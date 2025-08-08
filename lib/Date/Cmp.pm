@@ -172,7 +172,7 @@ sub datecmp
 
 	return 0 if($left eq $right);
 
-	if((!ref($left)) && (!ref($right)) && ($left =~ /\d{3,4}/) && ($right =~ /\d{3,4}/) && ($left !~ /^bet/i) && ($right !~ /^bet/i)) {
+	if((!ref($left)) && (!ref($right)) && ($left =~ /\d{3,4}/) && ($right =~ /\d{3,4}/) && ($left !~ /^bet/i) && ($left !~ /\-/) && ($right !~ /^bet/i) && ($right !~ /\-/)) {
 		if($left =~ /(\d{4})/) {
 			my $lyear = $1;
 			if($right =~ /(\d{4})/) {
@@ -197,7 +197,7 @@ sub datecmp
 	}
 
 	if(!ref($left)) {
-		if((!ref($right)) && ($left =~ /(^|[\s\/])\d{4}$/) && ($left !~ /^bet/i) && ($right !~ /^bet/i) && ($right =~ /(^|[\s\/,])(\d{4})$/)) {
+		if((!ref($right)) && ($left =~ /(^|[\s\/])\d{4}$/) && ($left !~ /^bet/i) && ($left !~ /\-/) && ($right !~ /^bet/i) && ($right !~ /\-/) && ($right =~ /(^|[\s\/,])(\d{4})$/)) {
 			my $ryear = $2;
 			$left =~ /(^|[\s\/])(\d{4})$/;
 			my $lyear = $2;
@@ -234,6 +234,7 @@ sub datecmp
 			}
 			return 0;
 		}
+
 		if($left =~ /^(Abt|ca?)\.?\s+(.+)/i) {
 			$left = $2;
 		} elsif($left =~ /(.+?)\s?\?$/) {
@@ -244,7 +245,7 @@ sub datecmp
 			$left = $1;
 		}
 
-		if(($left =~ /^\d{3,4}/) && ($right =~ /^\d{3,4}/)) {
+		if(($left =~ /^\d{3,4}/) && ($left !~ /\-/) && ($right =~ /^\d{3,4}/) && ($right !~ /\-/)) {
 			# e.g. 1929/06/26 <=> 1939
 			$left =~ /^(\d{3,4})/;
 			my $start = $1;
