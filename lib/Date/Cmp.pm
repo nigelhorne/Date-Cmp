@@ -197,6 +197,9 @@ sub datecmp
 	}
 
 	if(!ref($left)) {
+		# Remove terminating time
+		$left =~ s/T\d\d:\d\d:\d\d$//;
+
 		if((!ref($right)) && ($left =~ /(^|[\s\/])\d{4}$/) && ($left !~ /^bet/i) && ($left !~ /\-/) && ($right !~ /^bet/i) && ($right !~ /\-/) && ($right =~ /(^|[\s\/,])(\d{4})$/)) {
 			my $ryear = $2;
 			$left =~ /(^|[\s\/])(\d{4})$/;
@@ -349,6 +352,7 @@ sub datecmp
 				return 0;
 			}
 		} elsif($left !~ /^\d{3,4}$/) {
+::diag(__LINE__, ": $left");
 			if($left =~ /^\d{4}\-\d{2}\-\d{2}$/) {
 				# e.g. 1941-08-02
 			} elsif(($left !~ /[a-z]/i) || ($left =~ /[a-z]$/)) {
@@ -359,6 +363,7 @@ sub datecmp
 				die "Date parse failure: left = '$left' ($left <=> $right)";
 			}
 
+::diag(__LINE__, ": $left");
 			my @l = $dfg->parse_datetime({ date => $left, quiet => 1 });
 			my $rc = $l[1] || $l[0];
 			if(!defined($rc)) {
