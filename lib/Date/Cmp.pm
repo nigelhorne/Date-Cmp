@@ -352,7 +352,6 @@ sub datecmp
 				return 0;
 			}
 		} elsif($left !~ /^\d{3,4}$/) {
-::diag(__LINE__, ": $left");
 			if($left =~ /^\d{4}\-\d{2}\-\d{2}$/) {
 				# e.g. 1941-08-02
 			} elsif(($left !~ /[a-z]/i) || ($left =~ /[a-z]$/)) {
@@ -363,7 +362,6 @@ sub datecmp
 				die "Date parse failure: left = '$left' ($left <=> $right)";
 			}
 
-::diag(__LINE__, ": $left");
 			my @l = $dfg->parse_datetime({ date => $left, quiet => 1 });
 			my $rc = $l[1] || $l[0];
 			if(!defined($rc)) {
