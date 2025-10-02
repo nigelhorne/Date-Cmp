@@ -169,6 +169,12 @@ sub datecmp
 	if(Scalar::Util::blessed($right) && $right->can('date')) {
 		$right = $right->date();
 	}
+	if(ref($left) eq 'HASH') {
+		$left = $left->{'date'};
+	}
+	if(ref($right) eq 'HASH') {
+		$right = $right->{'date'};
+	}
 
 	return 0 if($left eq $right);
 
