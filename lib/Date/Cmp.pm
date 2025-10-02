@@ -292,11 +292,7 @@ sub datecmp
 				$complain->("from == to, $from") if($complain);
 				$left = $from;
 			} elsif($from > $to) {
-				print STDERR "datecmp(): $from > $to in daterange '$left'\n";
-				my $i = 0;
-				while((my @call_details = caller($i++))) {
-					print STDERR "\t", colored($call_details[2] . ' of ' . $call_details[1], 'red'), "\n";
-				}
+				$complain->("datecmp(): $from > $to in daterange '$left'") if($complain);
 				return 0;
 			} else {
 				if(ref($right)) {
