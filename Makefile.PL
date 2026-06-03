@@ -38,7 +38,6 @@ WriteMakefile(
 		resources => {
 			homepage => 'https://metacpan.org/pod/Date::Cmp',
 			repository => {
-				repository => 'https://github.com/nigelhorne/Date-Cmp',
 				type => 'git',
 				url => 'git://github.com/nigelhorne/Date-Cmp.git',
 				web => 'https://github.com/nigelhorne/Date-Cmp'

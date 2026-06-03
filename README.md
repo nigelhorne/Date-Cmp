@@ -4,7 +4,7 @@ Date::Cmp - Compare two dates with approximate parsing support
 
 # VERSION
 
-Version 0.04
+Version 0.05
 
 # SYNOPSIS
 
@@ -23,8 +23,8 @@ This module provides a single function, `datecmp`, which compares two date strin
 or date-like objects, returning a numeric comparison similar to Perl's spaceship operator (`<=>`).
 
 The comparison is tolerant of approximate dates (e.g., "Abt. 1902", "BET 1830 AND 1832", "Oct/Nov/Dec 1950"),
-partial dates (years only), and strings with common genealogy-style formats. It attempts to normalize
-and parse these into comparable values using [DateTime::Format::Genealogy](https://metacpan.org/pod/DateTime%3A%3AFormat%3A%3AGenealogy).
+partial dates (years only), and strings with common genealogy-style formats.
+It attempts to normalize and parse these into comparable values using [DateTime::Format::Genealogy](https://metacpan.org/pod/DateTime%3A%3AFormat%3A%3AGenealogy).
 
 # FUNCTIONS
 
@@ -124,13 +124,8 @@ You can find documentation for this module with the perldoc command.
 
 # LICENCE AND COPYRIGHT
 
-Copyright 2025 Nigel Horne.
+Copyright 2025-2026 Nigel Horne.
 
-Usage is subject to licence terms.
-
-The licence terms of this software are as follows:
-
-- Personal single user, single computer use: GPL2
-- All other users (including Commercial, Charity, Educational, Government)
-  must apply in writing for a licence for use from Nigel Horne at the
-  above e-mail.
+Usage is subject to the GPL2 licence terms.
+If you use it,
+please let me know.
