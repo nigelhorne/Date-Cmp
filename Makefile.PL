@@ -25,6 +25,7 @@ WriteMakefile(
 		'Scalar::Util' => 0,
 		'Term::ANSIColor' => 0
 	}, TEST_REQUIRES => {
+		'IPC::System::Simple' => 0,
 		'Test::DescribeMe' => 0,
 		'Test::Most' => 0,
 		'Test::Needs' => 0,

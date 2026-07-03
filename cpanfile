@@ -8,6 +8,7 @@ requires 'Scalar::Util';
 requires 'Term::ANSIColor';
 
 on 'test' => sub {
+	requires 'IPC::System::Simple';
 	requires 'Test::DescribeMe';
 	requires 'Test::Most';
 	requires 'Test::Needs';
