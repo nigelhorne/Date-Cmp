@@ -20,4 +20,13 @@ cmp_ok(Date::Cmp::datecmp(1939, 'bef 1 Jun 1965'), '<', 0, 'before year works RH
 cmp_ok(Date::Cmp::datecmp('16/11/1689', '1659-07-01'), '>', 0, 'different formats can be compared');
 cmp_ok(Date::Cmp::datecmp({ date => '16/11/1689' }, { date => '1659-07-01' }), '>', 0, 'different formats can be compared');
 
+# Regression: DateTime object on LHS must not crash when RHS is a year range.
+# '1 Jan 1996' is parsed into a DateTime object by DFG because its first 3-4
+# digit sequence (1996) equals the range start, bypassing the early-exit fast
+# path, and then reaching the range comparisons before the object was unwrapped.
+cmp_ok(Date::Cmp::datecmp('1 Jan 1996', '1996-2000'),    '==', 0, 'DateTime LHS within dash range');
+cmp_ok(Date::Cmp::datecmp('1 Jan 1996', 'BET 1996 AND 2000'), '==', 0, 'DateTime LHS within BET range');
+cmp_ok(Date::Cmp::datecmp('1 Jan 1994', '1996-2000'),    '<',  0, 'DateTime LHS before dash range');
+cmp_ok(Date::Cmp::datecmp('1 Jan 2001', '1996-2000'),    '>',  0, 'DateTime LHS after dash range');
+
 done_testing();
