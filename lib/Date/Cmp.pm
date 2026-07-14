@@ -178,6 +178,23 @@ sub datecmp
 
 	return 0 if($left eq $right);
 
+	if($left !~ /^[A-S0-9]/i) {
+		print STDERR "\ninvalid left date: $left\n";
+		my $i = 0;
+		while((my @call_details = caller($i++))) {
+			print STDERR "\t", colored($call_details[2] . ' of ' . $call_details[1], 'red'), "\n";
+		}
+		die "Date parse failure: left = '$left'";
+	}
+	if($right !~ /^[A-S0-9]/i) {
+		print STDERR "\ninvalid right date: $right\n";
+		my $i = 0;
+		while((my @call_details = caller($i++))) {
+			print STDERR "\t", colored($call_details[2] . ' of ' . $call_details[1], 'red'), "\n";
+		}
+		die "Date parse failure: right = '$right'";
+	}
+
 	if((!ref($left)) && (!ref($right)) && ($left =~ /\d{3,4}/) && ($right =~ /\d{3,4}/) && ($left !~ /^bet/i) && ($left !~ /\-/) && ($right !~ /^bet/i) && ($right !~ /^\d{3,4}\-\d{3,4}$/)) {
 		if($left =~ /(\d{4})/) {
 			my $lyear = $1;
