@@ -1,7 +1,8 @@
 Revision history for Date::Cmp
 
 0.07
-	Fix crash when a DateTime object (parsed from a complex left-hand date such as
+	[ Bug Fixes ]
+	- Fix crash when a DateTime object (parsed from a complex left-hand date such as
 	'1 Jan 1996') was compared against a year-range right-hand value ('1996-2000'
 	or 'BET 1996 AND 2000'): DateTime's overloaded == rejected the plain integer.
 	Move the ref($left)->year() unwrap before the first range comparison.
