@@ -6,6 +6,10 @@ Revision history for Date::Cmp
 	  '1 Jan 1996') was compared against a year-range right-hand value ('1996-2000'
 	  or 'BET 1996 AND 2000'): DateTime's overloaded == rejected the plain integer.
 	  Move the ref($left)->year() unwrap before the first range comparison.
+	- Fix crash when a right-hand range had equal endpoints (e.g. '1900-1900'):
+	  after collapsing to a single year the code fell through to the DFG fallback
+	  path, which cannot parse a bare integer and died. Return the comparison
+	  immediately after the complain callback instead.
 	- More stringent validation
 
 0.06

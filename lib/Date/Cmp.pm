@@ -430,7 +430,13 @@ sub datecmp
 			my ($from, $to) = ($1, $2);
 			if($from == $to) {
 				$complain->("from == to, $from") if($complain);
-				$right = $from;
+				# Return immediately: setting $right to a bare integer and
+				# falling through would reach the DFG path, which cannot
+				# parse an integer and would die.
+				if(ref($left)) {
+					return $left->year() <=> $from;
+				}
+				return $left <=> $from;
 			} elsif($from > $to) {
 				print STDERR "datecmp(): $from > $to in daterange '$right'\n";
 				my $i = 0;
