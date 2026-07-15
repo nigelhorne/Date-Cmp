@@ -79,6 +79,26 @@ jobs:
           set "PERL5LIB=%USERPROFILE%\perl5\lib\perl5"
           cpanm --notest --installdeps .
 
+      - name: Lint and syntax check
+        shell: perl {0}
+        run: |
+          use strict;
+          use warnings;
+          use File::Find;
+          my @failed;
+          my @dirs = grep { -d } qw(lib bin);
+          @dirs = ('.') unless @dirs;
+          find(sub {
+              return unless -f && /\.pm$/;
+              my $file = $File::Find::name;
+              system($^X, '-Mstrict', '-Mwarnings', '-c', $file) != 0
+                  and push @failed, $file;
+          }, @dirs);
+          if (@failed) {
+              warn "Syntax check failed: $_" for @failed;
+              exit 1;
+          }
+
       - name: Run tests
         if: runner.os != 'Windows'
         shell: bash
