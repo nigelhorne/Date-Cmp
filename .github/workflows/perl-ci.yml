@@ -86,12 +86,13 @@ jobs:
           use warnings;
           use File::Find;
           my @failed;
+          my @inc = ('-Ilib', map { "-I$_" } split(/:/, $ENV{PERL5LIB} // ''));
           my @dirs = grep { -d } qw(lib bin);
           @dirs = ('.') unless @dirs;
           find({ wanted => sub {
               return unless -f && /\.pm$/;
               my $file = $File::Find::name;
-              system($^X, '-Mstrict', '-Mwarnings', '-c', $file) != 0
+              system($^X, @inc, '-Mstrict', '-Mwarnings', '-c', $file) != 0
                   and push @failed, $file;
           }, no_chdir => 1 }, @dirs);
           if (@failed) {

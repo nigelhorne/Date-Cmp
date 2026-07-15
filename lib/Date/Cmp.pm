@@ -534,7 +534,13 @@ Nigel Horne, C<< <njh at nigelhorne.com> >>
 
 =head1 SEE ALSO
 
-L<Sort::Key::DateTime>
+=over 4
+
+=item * L<Test Dashboard|https://nigelhorne.github.io/Date-Cmp/coverage/>
+
+=item * L<Sort::Key::DateTime>
+
+=back
 
 =head1 SUPPORT
 

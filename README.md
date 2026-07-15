@@ -106,7 +106,8 @@ Nigel Horne, `<njh at nigelhorne.com>`
 
 # SEE ALSO
 
-[Sort::Key::DateTime](https://metacpan.org/pod/Sort%3A%3AKey%3A%3ADateTime)
+- [Test Dashboard](https://nigelhorne.github.io/Date-Cmp/coverage/)
+- [Sort::Key::DateTime](https://metacpan.org/pod/Sort%3A%3AKey%3A%3ADateTime)
 
 # SUPPORT
 
