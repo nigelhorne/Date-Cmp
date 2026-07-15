@@ -92,7 +92,9 @@ jobs:
           find({ wanted => sub {
               return unless -f && /\.pm$/;
               my $file = $File::Find::name;
-              system($^X, @inc, '-Mstrict', '-Mwarnings', '-c', $file) != 0
+              system($^X, @inc,
+                  '-e', 'push @INC, sub { open my $h, "<", \"1;\n"; $h }; do $ARGV[0]; if ($@) { warn $@; exit 1 }',
+                  $file) != 0
                   and push @failed, $file;
           }, no_chdir => 1 }, @dirs);
           if (@failed) {
