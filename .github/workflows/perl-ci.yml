@@ -85,22 +85,21 @@ jobs:
           use strict;
           use warnings;
           use File::Find;
+          use lib 'lib';
           my @failed;
-          my @inc = ('-Ilib', map { "-I$_" } split(/:/, $ENV{PERL5LIB} // ''));
+          push @INC, sub { open my $h, '<', \qq{1;\n}; $h };
           my @dirs = grep { -d } qw(lib bin);
           @dirs = ('.') unless @dirs;
           find({ wanted => sub {
               return unless -f && /\.pm$/;
               my $file = $File::Find::name;
-              system($^X, @inc,
-                  '-e', 'push @INC, sub { open my $h, "<", \"1;\n"; $h }; do $ARGV[0]; if ($@) { warn $@; exit 1 }',
-                  $file) != 0
-                  and push @failed, $file;
+              do $file;
+              if ($@) {
+                  warn "Syntax check failed: $file\n";
+                  push @failed, $file;
+              }
           }, no_chdir => 1 }, @dirs);
-          if (@failed) {
-              warn "Syntax check failed: $_" for @failed;
-              exit 1;
-          }
+          exit @failed ? 1 : 0;
 
           if (($ENV{RUNNER_OS} // '') eq 'Linux') {
               system('cpanm --notest --quiet warnings::unused 2>/dev/null');
@@ -130,6 +129,15 @@ jobs:
           eval $(perl -I ~/perl5/lib/perl5 -Mlocal::lib)
           cpanm --notest Perl::Critic
           perlcritic --severity 3 lib/ || true
+        shell: bash
+
+      - name: Check imports with perlimports
+        if: matrix.perl == '5.40' && matrix.os == 'ubuntu-latest'
+        continue-on-error: true
+        run: |
+          eval $(perl -I ~/perl5/lib/perl5 -Mlocal::lib)
+          cpanm --notest App::perlimports
+          find lib -name '*.pm' | xargs perlimports --lint
         shell: bash
 
       - name: Test coverage
