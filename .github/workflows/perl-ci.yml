@@ -88,12 +88,12 @@ jobs:
           my @failed;
           my @dirs = grep { -d } qw(lib bin);
           @dirs = ('.') unless @dirs;
-          find(sub {
+          find({ wanted => sub {
               return unless -f && /\.pm$/;
               my $file = $File::Find::name;
               system($^X, '-Mstrict', '-Mwarnings', '-c', $file) != 0
                   and push @failed, $file;
-          }, @dirs);
+          }, no_chdir => 1 }, @dirs);
           if (@failed) {
               warn "Syntax check failed: $_" for @failed;
               exit 1;
