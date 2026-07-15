@@ -10,6 +10,7 @@ requires 'Term::ANSIColor';
 on 'test' => sub {
 	requires 'IPC::System::Simple';
 	requires 'Test::DescribeMe';
+	requires 'Test::Memory::Cycle';
 	requires 'Test::Most';
 	requires 'Test::Needs';
 	requires 'Test::Returns';

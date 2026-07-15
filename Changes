@@ -12,6 +12,9 @@ Revision history for Date::Cmp
 	  immediately after the complain callback instead.
 	- More stringent validation
 
+	[ Enhancements ]
+	- Added test dashboard
+
 0.06
 	Allow the dates to be hashrefs, in which case use the date element of the hash
 
