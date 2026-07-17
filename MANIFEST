@@ -16,3 +16,4 @@ t/pod-cm.t
 t/pod-snippets.t
 t/pod-synopsis.t
 t/pod.t
+t/unit.t

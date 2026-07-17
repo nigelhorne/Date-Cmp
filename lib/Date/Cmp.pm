@@ -51,36 +51,96 @@ It attempts to normalize and parse these into comparable values using L<DateTime
 
 =head2 datecmp
 
-  my $result = datecmp($left, $right);
-  my $result = datecmp($left, $right, \&complain);
+=head3 Purpose
 
-Compares two date strings or date-like objects and returns:
+Compare two genealogy-style date strings or date-like objects, returning a
+numeric result equivalent to Perl's spaceship operator (C<< <=> >>).
+
+=head3 Arguments
 
 =over 4
 
-=item * -1 if C<$left> is earlier than C<$right>
+=item C<$left> (required)
 
-=item * 0 if they are equivalent
+The left-hand date to compare. Accepts any of:
 
-=item * 1 if C<$left> is later than C<$right>
+=over 8
+
+=item * A string in any format listed under L</SUPPORTED FORMATS>.
+
+=item * A blessed object implementing a C<date()> method that returns a date string.
+
+=item * A hash reference with a C<date> key whose value is a date string.
 
 =back
 
-Parameters:
+=item C<$right> (required)
 
-=over 4
-
-=item C<$left>, C<$right>
-
-The values to compare. These may be strings in a variety of genealogical or ISO-style formats,
-or blessed objects that implement a C<date()> method returning a date string.
+The right-hand date to compare. Accepts the same types as C<$left>.
 
 =item C<$complain> (optional)
 
-A coderef that will be called with diagnostic messages when ambiguous or unexpected conditions are encountered,
-e.g. when comparing a range with equal endpoints.
+A coderef invoked with a diagnostic string for ambiguous conditions such as a
+date range with equal endpoints or an inverted range.
 
 =back
+
+=head3 Returns
+
+=over 4
+
+=item * C<-1> if C<$left> is earlier than C<$right>
+
+=item * C<0> if the two dates are equivalent
+
+=item * C<1> if C<$left> is later than C<$right>
+
+=back
+
+When either argument is C<undef>, prints a diagnostic to STDERR and returns C<0>.
+On a fatal parse failure, dies with a string beginning C<"Date parse failure: ">.
+
+=head3 Side Effects
+
+May print coloured diagnostic output to STDERR when dates cannot be parsed, when
+a range is inverted, or when arguments are undefined. The optional C<$complain>
+callback is invoked instead of (or in addition to) STDERR output for selected
+ambiguous conditions.
+
+=head3 Usage Example
+
+  use Date::Cmp qw(datecmp);
+
+  my $cmp = datecmp('BET 1830 AND 1832', '1831');   # 0
+  my $cmp = datecmp('Abt. 1850', '1855');            # -1
+  my $cmp = datecmp('1 Jan 1996', '1996-2000',
+      sub { warn "ambiguous: @_" });
+
+=head3 API SPECIFICATION
+
+=head4 Input
+
+  $left    : Str | Object(date) | HashRef(date => Str)   # required
+  $right   : Str | Object(date) | HashRef(date => Str)   # required
+  $complain: CodeRef                                      # optional
+
+Valid string types (see L</SUPPORTED FORMATS> for pattern details):
+
+  exact    => qr/^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2})?$/
+  slash    => qr{^\d+/\d+/\d{4}$}
+  year     => qr/^\d{3,4}$/
+  approx   => qr/^(?:Abt\.?|ca?\.?)\s+.+/i  |  qr/.+\s?\?$/
+  range    => qr/^\d{3,4}-\d{3,4}$/  |  qr/^BET \d+ AND \d+$/i
+  month_rng=> qr/^[a-z\/]+\s+\d{3,4}$/i
+  before   => qr/^bef\b/i
+  after    => qr/^aft\b/i
+
+=head4 Output
+
+  Int: -1 | 0 | 1
+
+  Or dies("Date parse failure: ...") when a date cannot be parsed.
+  Returns 0 (after STDERR output) when either argument is undef.
 
 =head1 SUPPORTED FORMATS
 
