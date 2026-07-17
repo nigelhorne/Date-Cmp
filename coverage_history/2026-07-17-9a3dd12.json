@@ -1,0 +1,217 @@
+{
+   "runs" : [
+      {
+         "OS" : "linux",
+         "abstract" : "Compare two dates with approximate parsing support",
+         "dir" : "/home/runner/work/Date-Cmp/Date-Cmp",
+         "finish" : 1784317978.75205,
+         "name" : "Date-Cmp",
+         "perl" : "5.40.4",
+         "run" : "-e",
+         "start" : 1784317971.77114,
+         "version" : "0.05"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Compare two dates with approximate parsing support",
+         "dir" : "/home/runner/work/Date-Cmp/Date-Cmp",
+         "finish" : 1784317971.92187,
+         "name" : "Date-Cmp",
+         "perl" : "5.40.4",
+         "run" : "-e",
+         "start" : 1784317971.92174,
+         "version" : "0.05"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Compare two dates with approximate parsing support",
+         "dir" : "/home/runner/work/Date-Cmp/Date-Cmp",
+         "finish" : 1784317972.77217,
+         "name" : "Date-Cmp",
+         "perl" : "5.40.4",
+         "run" : "t/30-basics.t",
+         "start" : 1784317972.58854,
+         "version" : "0.05"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Compare two dates with approximate parsing support",
+         "dir" : "/home/runner/work/Date-Cmp/Date-Cmp",
+         "finish" : 1784317973.80533,
+         "name" : "Date-Cmp",
+         "perl" : "5.40.4",
+         "run" : "t/cmp.t",
+         "start" : 1784317973.57849,
+         "version" : "0.05"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Compare two dates with approximate parsing support",
+         "dir" : "/home/runner/work/Date-Cmp/Date-Cmp",
+         "finish" : 1784317974.82348,
+         "name" : "Date-Cmp",
+         "perl" : "5.40.4",
+         "run" : "t/datecmp.t",
+         "start" : 1784317974.59805,
+         "version" : "0.05"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Compare two dates with approximate parsing support",
+         "dir" : "/home/runner/work/Date-Cmp/Date-Cmp",
+         "finish" : 1784317975.21293,
+         "name" : "Date-Cmp",
+         "perl" : "5.40.4",
+         "run" : "t/eof.t",
+         "start" : 1784317975.21269,
+         "version" : "0.05"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Compare two dates with approximate parsing support",
+         "dir" : "/home/runner/work/Date-Cmp/Date-Cmp",
+         "finish" : 1784317975.44677,
+         "name" : "Date-Cmp",
+         "perl" : "5.40.4",
+         "run" : "t/eol.t",
+         "start" : 1784317975.4465,
+         "version" : "0.05"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Compare two dates with approximate parsing support",
+         "dir" : "/home/runner/work/Date-Cmp/Date-Cmp",
+         "finish" : 1784317976.42601,
+         "name" : "Date-Cmp",
+         "perl" : "5.40.4",
+         "run" : "t/function.t",
+         "start" : 1784317976.11986,
+         "version" : "0.05"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Compare two dates with approximate parsing support",
+         "dir" : "/home/runner/work/Date-Cmp/Date-Cmp",
+         "finish" : 1784317976.85991,
+         "name" : "Date-Cmp",
+         "perl" : "5.40.4",
+         "run" : "t/pod-cm.t",
+         "start" : 1784317976.85963,
+         "version" : "0.05"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Compare two dates with approximate parsing support",
+         "dir" : "/home/runner/work/Date-Cmp/Date-Cmp",
+         "finish" : 1784317977.09492,
+         "name" : "Date-Cmp",
+         "perl" : "5.40.4",
+         "run" : "t/pod-snippets.t",
+         "start" : 1784317977.09462,
+         "version" : "0.05"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Compare two dates with approximate parsing support",
+         "dir" : "/home/runner/work/Date-Cmp/Date-Cmp",
+         "finish" : 1784317977.3286,
+         "name" : "Date-Cmp",
+         "perl" : "5.40.4",
+         "run" : "t/pod-synopsis.t",
+         "start" : 1784317977.32831,
+         "version" : "0.05"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Compare two dates with approximate parsing support",
+         "dir" : "/home/runner/work/Date-Cmp/Date-Cmp",
+         "finish" : 1784317977.5617,
+         "name" : "Date-Cmp",
+         "perl" : "5.40.4",
+         "run" : "t/pod.t",
+         "start" : 1784317977.56141,
+         "version" : "0.05"
+      },
+      {
+         "OS" : "linux",
+         "abstract" : "Compare two dates with approximate parsing support",
+         "dir" : "/home/runner/work/Date-Cmp/Date-Cmp",
+         "finish" : 1784317978.52577,
+         "name" : "Date-Cmp",
+         "perl" : "5.40.4",
+         "run" : "t/unit.t",
+         "start" : 1784317978.23408,
+         "version" : "0.05"
+      }
+   ],
+   "summary" : {
+      "Total" : {
+         "branch" : {
+            "covered" : 133,
+            "error" : 51,
+            "percentage" : 72.2826086956522,
+            "total" : 184,
+            "uncoverable" : 0
+         },
+         "condition" : {
+            "covered" : 89,
+            "error" : 19,
+            "percentage" : 82.4074074074074,
+            "total" : 108,
+            "uncoverable" : 0
+         },
+         "statement" : {
+            "covered" : 186,
+            "error" : 49,
+            "percentage" : 79.1489361702128,
+            "total" : 235
+         },
+         "subroutine" : {
+            "covered" : 7,
+            "percentage" : 100,
+            "total" : 7
+         },
+         "total" : {
+            "covered" : 415,
+            "error" : 119,
+            "percentage" : 77.7153558052434,
+            "total" : 534,
+            "uncoverable" : 0
+         }
+      },
+      "blib/lib/Date/Cmp.pm" : {
+         "branch" : {
+            "covered" : 133,
+            "error" : 51,
+            "percentage" : 72.2826086956522,
+            "total" : 184,
+            "uncoverable" : 0
+         },
+         "condition" : {
+            "covered" : 89,
+            "error" : 19,
+            "percentage" : 82.4074074074074,
+            "total" : 108,
+            "uncoverable" : 0
+         },
+         "statement" : {
+            "covered" : 186,
+            "error" : 49,
+            "percentage" : 79.1489361702128,
+            "total" : 235
+         },
+         "subroutine" : {
+            "covered" : 7,
+            "percentage" : 100,
+            "total" : 7
+         },
+         "total" : {
+            "covered" : 415,
+            "error" : 119,
+            "percentage" : 77.7153558052434,
+            "total" : 534,
+            "uncoverable" : 0
+         }
+      }
+   }
+}
