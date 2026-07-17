@@ -346,17 +346,15 @@ sub datecmp
 					my @r = $dfg->parse_datetime({ date => $right, quiet => 1 });
 					if(!defined($r[0])) {
 						if($right =~ /[\s\/](\d{4})$/) {
-							# e.g. cmp "1891 <=> Oct/Nov/Dec 1892"
-							# or 5/27/1872
+							# e.g. 'BET 1830 AND 1832' <=> 'Oct/Nov/Dec 1821'
+							# $left is still the range string here; use $from/$to.
 							my $year = $1;
-							if(ref($left)) {
-								if($left->year() != $year) {
-									return $left->year() <=> $year;
-								}
+							if($year < $from) {
+								return 1;
+							} elsif($year > $to) {
+								return -1;
 							} else {
-								if($left != $year) {
-									return $left <=> $year;
-								}
+								return 0;
 							}
 						}
 						# TODO: throw an error that we can catch
