@@ -1,0 +1,1643 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+
+/* --------------------------------------------------
+   CSS Variables (Light Mode Default)
+-------------------------------------------------- */
+
+:root {
+    --bg: #ffffff;
+    --text: #000000;
+    --table-header: #333;
+    --table-header-text: #ffffff;
+
+    --survived-1: #f8d7da;
+    --survived-2: #f5b7b1;
+    --survived-3: #ec7063;
+
+    --killed: #d4edda;
+    --border: #cccccc;
+}
+
+/* --------------------------------------------------
+   Dark Mode Overrides
+-------------------------------------------------- */
+
+html[data-theme='dark'] {
+    --bg: #1e1e1e;
+    --text: #dddddd;
+    --table-header: #222;
+    --table-header-text: #ffffff;
+
+    --survived-1: #5c2b2e;
+    --survived-2: #7b2c2f;
+    --survived-3: #a93226;
+
+    --killed: #1e4620;
+    --border: #555;
+}
+
+/* --------------------------------------------------
+   Global Styles
+-------------------------------------------------- */
+
+body {
+	font-family: sans-serif;
+	background: var(--bg);
+	color: var(--text);
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th {
+    background: var(--table-header);
+    color: var(--table-header-text);
+}
+
+.survived-1 { background-color: var(--survived-1); }
+.survived-2 { background-color: var(--survived-2); }
+.survived-3 { background-color: var(--survived-3); }
+
+.killed { background-color: var(--killed); }
+
+.legend {
+    border: 1px solid #ccc;
+    background: #fafafa;
+    padding: 10px;
+    margin: 15px 0;
+    font-size: 0.9em;
+}
+
+.legend pre {
+    background: #f4f4f4;
+    padding: 5px;
+}
+
+.legend-box {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin: 0 6px 0 20px;
+    vertical-align: middle;
+    border: 1px solid var(--border);
+}
+
+/* White box for non-mutated lines */
+.legend-box.none {
+	background-color: var(--bg);
+}
+
+/* --------------------------------------------------
+   Suggested Test Box Styling
+   Theme-aware and readable in light & dark modes
+-------------------------------------------------- */
+
+.suggested-test {
+    margin-top: 6px;
+    margin-bottom: 12px;
+
+    /* Use theme variables instead of hardcoded colors */
+    background: var(--bg);
+    color: var(--text);
+
+    padding: 8px;
+    border-radius: 4px;
+
+    /* Subtle border for visual separation */
+    border: 1px solid var(--border);
+}
+
+/* Label styling */
+.suggest-label {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+/* Ensure the test code block inherits readable colors */
+.suggested-test pre {
+    background: transparent;   /* Prevent nested dark blocks */
+    color: inherit;            /* Match theme text color */
+    margin: 0;
+    font-family: monospace;
+}
+
+pre { line-height: 1.4; }
+
+pre > details {
+    margin: 0.2em 0;
+}
+
+pre > details:first-child {
+    margin-top: 0;
+}
+
+pre > details:last-child {
+    margin-bottom: 0;
+}
+
+pre details,
+pre summary,
+pre ul,
+pre li {
+    white-space: normal;
+    margin: 0;
+    padding: 0;
+    line-height: 1.2;
+}
+
+.nav { margin-bottom: 1em; }
+
+.toggle {
+    float: right;
+    cursor: pointer;
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+}
+
+/* Tooltip container */
+.tooltip {
+	position: relative;
+	cursor: help;
+}
+
+/* Tooltip bubble */
+.tooltip:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background: var(--table-header);
+    color: var(--table-header-text);
+    padding: 6px 10px;
+    white-space: normal;
+    max-width: 300px;
+    min-width: 30ch;
+    font-size: 12px;
+    border-radius: 6px;
+    z-index: 1000;
+    margin-left: 10ch;   /* move tooltip ~10 characters to the right */
+}
+
+.mutant-details {
+	margin-left: 2em;
+	font-size: 0.9em;
+}
+
+/* Indent the list of mutations that displays when expanding by 8 characters */
+pre details.mutant-details ul {
+	padding-left: 8ch;
+	margin: 0.2em 0;
+}
+
+.mutant-details summary {
+	cursor: pointer;
+	font-weight: bold;
+}
+
+.lcsaj-dot {
+    color: #5555ff;
+    font-size: 10px;
+    margin-right: 3px;
+}
+
+.lcsaj-dot-uncovered {
+    color: #cc4444;
+    font-size: 10px;
+    margin-right: 3px;
+}
+
+.lcsaj-tip {
+	position: relative;
+	display: inline-block;
+}
+
+.lcsaj-tip .lcsaj-tip-text {
+	visibility: hidden;
+	background-color: #333;
+	color: #fff;
+	padding: 4px 8px;
+	border-radius: 4px;
+	font-size: 11px;
+	white-space: nowrap;
+	position: fixed;
+	z-index: 9999;
+	pointer-events: none;
+}
+
+.lcsaj-tip:hover .lcsaj-tip-text {
+	visibility: visible;
+}
+
+</style>
+</head>
+<body>
+<button class="toggle" onclick="toggleTheme()">🌙 Toggle Theme</button>
+<h1>lib/Date/Cmp.pm</h1>
+<div class="nav"><a href="../../../index.html">Index</a>
+</div><div class='summary'>
+<strong>Structural Coverage (Approximate)</strong><p>
+TER1 (Statement): 79.15%<br>
+TER2 (Branch): 72.28%<br>
+TER3 (LCSAJ): 100.0% (13/13)<br>
+Approximate LCSAJ segments: 185<br>
+</div>
+
+    <div class="legend">
+        <h3>LCSAJ Legend</h3>
+
+        <p>
+        <span class="lcsaj-dot">●</span>
+        <b>Covered</b> — this LCSAJ path was executed during testing.
+        </p>
+
+        <p>
+        <span class="lcsaj-dot-uncovered">●</span>
+        <b>Not covered</b> — this LCSAJ path was never executed. These are the paths to focus on.
+        </p>
+
+        <p>
+        Multiple dots on a line indicate that multiple control-flow paths begin at that line.
+        Hovering over any dot shows:
+        </p>
+
+        <pre>
+        start → end → jump
+        </pre>
+
+        <ul>
+        <li><b>start</b> – first line of the linear sequence</li>
+        <li><b>end</b> – last line before control flow changes</li>
+        <li><b>jump</b> – line execution jumps to next</li>
+        </ul>
+
+        <p>
+        Uncovered paths show <b>[NOT COVERED]</b> in the tooltip.
+	</p>
+    </div>
+
+		<div class="legend">
+			<h3>Mutant Testing Legend</h3>
+			<span class="legend-box survived-1"></span> Survived (tests missed this)
+			<span class="legend-box killed"></span> Killed (tests detected this)
+			<span class="legend-box none"></span> No mutation
+		</div>
+	<pre>
+<span class="">    1: package Date::Cmp;
+</span><span class="">    2: 
+</span><span class="">    3: # Compare two dates. Approximate dates are compared.
+</span><span class="">    4: # TODO: handle when only months are known
+</span><span class="">    5: 
+</span><span class="">    6: use strict;
+</span><span class="">    7: use warnings;
+</span><span class="">    8: 
+</span><span class="">    9: use DateTime::Format::Genealogy 0.11;
+</span><span class="">   10: use Scalar::Util;
+</span><span class="">   11: use Term::ANSIColor;
+</span><span class="">   12: 
+</span><span class="">   13: use Exporter qw(import);
+</span><span class="">   14: our @EXPORT_OK = qw(datecmp);
+</span><span class="">   15: 
+</span><span class="">   16: our $dfg = DateTime::Format::Genealogy-&gt;new();
+</span><span class="">   17: 
+</span><span class="">   18: =head1 NAME
+</span><span class="">   19: 
+</span><span class="">   20: Date::Cmp - Compare two dates with approximate parsing support
+</span><span class="">   21: 
+</span><span class="">   22: =head1 VERSION
+</span><span class="">   23: 
+</span><span class="">   24: Version 0.05
+</span><span class="">   25: 
+</span><span class="">   26: =cut
+</span><span class="">   27: 
+</span><span class="">   28: our $VERSION = &#39;0.05&#39;;
+</span><span class="">   29: 
+</span><span class="">   30: =head1 SYNOPSIS
+</span><span class="">   31: 
+</span><span class="">   32:   use Date::Cmp qw(datecmp);
+</span><span class="">   33: 
+</span><span class="">   34:   my $date1 = &#39;1914&#39;;
+</span><span class="">   35:   my $date2 = &#39;1918&#39;;
+</span><span class="">   36:   my $cmp = datecmp($date1, $date2);
+</span><span class="">   37: 
+</span><span class="">   38:   # Optionally provide a complaint callback:
+</span><span class="">   39:   $cmp = datecmp($date1, $date2, sub { warn @_ });
+</span><span class="">   40: 
+</span><span class="">   41: =head1 DESCRIPTION
+</span><span class="">   42: 
+</span><span class="">   43: This module provides a single function, C&lt;datecmp&gt;, which compares two date strings
+</span><span class="">   44: or date-like objects, returning a numeric comparison similar to Perl&#39;s spaceship operator (C&lt;&lt; &lt;=&gt; &gt;&gt;).
+</span><span class="">   45: 
+</span><span class="">   46: The comparison is tolerant of approximate dates (e.g., &quot;Abt. 1902&quot;, &quot;BET 1830 AND 1832&quot;, &quot;Oct/Nov/Dec 1950&quot;),
+</span><span class="">   47: partial dates (years only), and strings with common genealogy-style formats.
+</span><span class="">   48: It attempts to normalize and parse these into comparable values using L&lt;DateTime::Format::Genealogy&gt;.
+</span><span class="">   49: 
+</span><span class="">   50: =head1 FUNCTIONS
+</span><span class="">   51: 
+</span><span class="">   52: =head2 datecmp
+</span><span class="">   53: 
+</span><span class="">   54:   my $result = datecmp($left, $right);
+</span><span class="">   55:   my $result = datecmp($left, $right, \&amp;complain);
+</span><span class="">   56: 
+</span><span class="">   57: Compares two date strings or date-like objects and returns:
+</span><span class="">   58: 
+</span><span class="">   59: =over 4
+</span><span class="">   60: 
+</span><span class="">   61: =item * -1 if C&lt;$left&gt; is earlier than C&lt;$right&gt;
+</span><span class="">   62: 
+</span><span class="">   63: =item * 0 if they are equivalent
+</span><span class="">   64: 
+</span><span class="">   65: =item * 1 if C&lt;$left&gt; is later than C&lt;$right&gt;
+</span><span class="">   66: 
+</span><span class="">   67: =back
+</span><span class="">   68: 
+</span><span class="">   69: Parameters:
+</span><span class="">   70: 
+</span><span class="">   71: =over 4
+</span><span class="">   72: 
+</span><span class="">   73: =item C&lt;$left&gt;, C&lt;$right&gt;
+</span><span class="">   74: 
+</span><span class="">   75: The values to compare. These may be strings in a variety of genealogical or ISO-style formats,
+</span><span class="">   76: or blessed objects that implement a C&lt;date()&gt; method returning a date string.
+</span><span class="">   77: 
+</span><span class="">   78: =item C&lt;$complain&gt; (optional)
+</span><span class="">   79: 
+</span><span class="">   80: A coderef that will be called with diagnostic messages when ambiguous or unexpected conditions are encountered,
+</span><span class="">   81: e.g. when comparing a range with equal endpoints.
+</span><span class="">   82: 
+</span><span class="">   83: =back
+</span><span class="">   84: 
+</span><span class="">   85: =head1 SUPPORTED FORMATS
+</span><span class="">   86: 
+</span><span class="">   87: The function supports a variety of partial or approximate formats,
+</span><span class="">   88: including:
+</span><span class="">   89: 
+</span><span class="">   90: =over 4
+</span><span class="">   91: 
+</span><span class="">   92: =item * Exact dates (e.g. C&lt;1941-08-02&gt;, C&lt;5/27/1872&gt;)
+</span><span class="">   93: 
+</span><span class="">   94: =item * Years only (e.g. C&lt;1828&gt;)
+</span><span class="">   95: 
+</span><span class="">   96: =item * Approximate dates (e.g. C&lt;Abt. 1802&gt;, C&lt;ca. 1802&gt;, C&lt;1802 ?&gt;)
+</span><span class="">   97: 
+</span><span class="">   98: =item * Date ranges (e.g. C&lt;1802-1803&gt;, C&lt;BET 1830 AND 1832&gt;)
+</span><span class="">   99: 
+</span><span class="">  100: =item * Month ranges (e.g. C&lt;Oct/Nov/Dec 1950&gt;)
+</span><span class="">  101: 
+</span><span class="">  102: =item * Qualifiers like C&lt;BEF&gt;, C&lt;AFT&gt;
+</span><span class="">  103: 
+</span><span class="">  104: =back
+</span><span class="">  105: 
+</span><span class="">  106: =head1 ERROR HANDLING
+</span><span class="">  107: 
+</span><span class="">  108: In cases where a date cannot be parsed or compared meaningfully, diagnostic messages
+</span><span class="">  109: will be printed to STDERR, and the function may die with an error. Callbacks and
+</span><span class="">  110: stack traces are used to help identify parsing issues.
+</span><span class="">  111: 
+</span><span class="">  112: =cut
+</span><span class="">  113: 
+</span><span class="">  114: sub datecmp
+</span><span class="">  115: {
+</span><span class=""><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">116 → 118 → 133</span></span>  116: 	my ($left, $right, $complain) = @_;
+</span><span class="">  117: 
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  118: 	if((!defined($left)) || !defined($right)) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  119: 		print STDERR &quot;\n&quot;;
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  120: 		if(!defined($left)) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_120_3: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="">  121: 			print STDERR &quot;left not defined\n&quot;;
+</span><span class="">  122: 		}
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  123: 		if(!defined($right)) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_123_3: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="">  124: 			print STDERR &quot;right not defined\n&quot;;
+</span><span class="">  125: 		}
+</span><span class="">  126: 		my $i = 0;
+</span><span class="">  127: 		while((my @call_details = caller($i++))) {
+</span><span class="">  128: 			print STDERR &quot;\t&quot;, colored($call_details[2] . &#39; of &#39; . $call_details[1], &#39;red&#39;), &quot;\n&quot;;
+</span><span class="">  129: 		}
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  130: 		return 0;
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  131: 	}
+</span><span class="">  132: 
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic."><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">133 → 133 → 136</span></span>  133: 	if(Scalar::Util::blessed($left) &amp;&amp; $left-&gt;can(&#39;date&#39;)) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  134: 		$left = $left-&gt;date();
+</span><span class="">  135: 	}
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic."><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">136 → 136 → 139</span></span>  136: 	if(Scalar::Util::blessed($right) &amp;&amp; $right-&gt;can(&#39;date&#39;)) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  137: 		$right = $right-&gt;date();
+</span><span class="">  138: 	}
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic."><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">139 → 139 → 142</span></span>  139: 	if(ref($left) eq &#39;HASH&#39;) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  140: 		$left = $left-&gt;{&#39;date&#39;};
+</span><span class="">  141: 	}
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic."><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">142 → 142 → 146</span></span>  142: 	if(ref($right) eq &#39;HASH&#39;) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  143: 		$right = $right-&gt;{&#39;date&#39;};
+</span><span class="">  144: 	}
+</span><span class="">  145: 
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic."><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">146 → 148 → 156</span></span>  146: 	return 0 if($left eq $right);
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  147: 
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  148: 	if($left !~ /^[A-S0-9]/i) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  149: 		print STDERR &quot;\ninvalid left date: $left\n&quot;;
+</span><span class="">  150: 		my $i = 0;
+</span><span class="">  151: 		while((my @call_details = caller($i++))) {
+</span><span class="">  152: 			print STDERR &quot;\t&quot;, colored($call_details[2] . &#39; of &#39; . $call_details[1], &#39;red&#39;), &quot;\n&quot;;
+</span><span class="">  153: 		}
+</span><span class="">  154: 		die &quot;Date parse failure: left = &#39;$left&#39;&quot;;
+</span><span class="">  155: 	}
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic."><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">156 → 156 → 165</span></span>  156: 	if($right !~ /^[A-S0-9]/i) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  157: 		print STDERR &quot;\ninvalid right date: $right\n&quot;;
+</span><span class="">  158: 		my $i = 0;
+</span><span class="">  159: 		while((my @call_details = caller($i++))) {
+</span><span class="">  160: 			print STDERR &quot;\t&quot;, colored($call_details[2] . &#39; of &#39; . $call_details[1], &#39;red&#39;), &quot;\n&quot;;
+</span><span class="">  161: 		}
+</span><span class="">  162: 		die &quot;Date parse failure: right = &#39;$right&#39;&quot;;
+</span><span class="">  163: 	}
+</span><span class="">  164: 
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic."><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">165 → 165 → 178</span></span>  165: 	if((!ref($left)) &amp;&amp; (!ref($right)) &amp;&amp; ($left =~ /\d{3,4}/) &amp;&amp; ($right =~ /\d{3,4}/) &amp;&amp; ($left !~ /^bet/i) &amp;&amp; ($left !~ /\-/) &amp;&amp; ($right !~ /^bet/i) &amp;&amp; ($right !~ /^\d{3,4}\-\d{3,4}$/)) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  166: 		if($left =~ /(\d{4})/) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  167: 			my $lyear = $1;
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  168: 			if($right =~ /(\d{4})/) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  169: 				my $ryear = $1;
+</span><span class="">  170: 
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  171: 				if($lyear != $ryear) {
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  172: 					return $lyear &lt;=&gt; $ryear;
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  173: 				}
+</span><span class="">  174: 			}
+</span><span class="">  175: 		}
+</span><span class="">  176: 	}
+</span><span class="">  177: 
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic."><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">178 → 178 → 189</span></span>  178: 	if((!ref($left)) &amp;&amp; (!ref($right)) &amp;&amp; ($left =~ /(\d{3,4})$/) &amp;&amp; ($left !~ /^bet/i) &amp;&amp; ($left !~ /\-/) &amp;&amp; ($right !~ /^bet/i) &amp;&amp; ($right !~ /\-/)) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  179: 		# Simple year test for fast comparison
+</span><span class="">  180: 		my $yol = $1;
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  181: 		if($right =~ /(\d{3,4})$/) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_181_3: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="">  182: 			my $yor = $1;
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  183: 			if($yol != $yor) {
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  184: 				return $yol &lt;=&gt; $yor;
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>BOOL_NEGATE_184_5: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boolean branch test suggestion
+ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>RETURN_UNDEF_184_5: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Return value assertion
+is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
+</pre>
+								</div>
+							</li></ul></details>
+<span class="">  185: 			}
+</span><span class="">  186: 		}
+</span><span class="">  187: 	}
+</span><span class="">  188: 
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic."><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">189 → 189 → 363</span></span>  189: 	if(!ref($left)) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  190: 		# Remove terminating time
+</span><span class="">  191: 		$left =~ s/T\d\d:\d\d:\d\d$//;
+</span><span class="">  192: 
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  193: 		if((!ref($right)) &amp;&amp; ($left =~ /(^|[\s\/])\d{4}$/) &amp;&amp; ($left !~ /^bet/i) &amp;&amp; ($left !~ /\-/) &amp;&amp; ($right !~ /^bet/i) &amp;&amp; ($right !~ /\-/) &amp;&amp; ($right =~ /(^|[\s\/,])(\d{4})$/)) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  194: 			my $ryear = $2;
+</span><span class="">  195: 			$left =~ /(^|[\s\/])(\d{4})$/;
+</span><span class="">  196: 			my $lyear = $2;
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  197: 			if($lyear != $ryear) {
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  198: 				# Easy comparison for different years
+</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  199: 				return $lyear &lt;=&gt; $ryear;
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>BOOL_NEGATE_199_5: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boolean branch test suggestion
+ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>RETURN_UNDEF_199_5: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Return value assertion
+is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
+</pre>
+								</div>
+							</li></ul></details>
+<span class="">  200: 			}
+</span><span class="">  201: 		}
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  202: 		if($left =~ /^(bef|aft)/i) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  203: 			if($right =~ /^\d+$/) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_203_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="">  204: 				# For example, comparing bef 1 Jun 1965 &lt;=&gt; 1969
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  205: 				if($left =~ /\s(\d+)$/) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_205_5: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="">  206: 					# Easy comparison for different years
+</span><span class="survived-3 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch. Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one).">  207: 					if($1 &lt; $right) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 4, Killed: 0, Survived: 4)</summary>
+					<ul>
+				<li><b>NUM_BOUNDARY_207_12_>: Numeric boundary flip < to ></b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>NUM_BOUNDARY_207_12_<=: Numeric boundary flip < to <=</b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>NUM_BOUNDARY_207_12_>=: Numeric boundary flip < to >=</b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>COND_INV_207_6: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  208: 						return -1;
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>BOOL_NEGATE_208_7: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boolean branch test suggestion
+ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>RETURN_UNDEF_208_7: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Return value assertion
+is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
+</pre>
+								</div>
+							</li></ul></details>
+<span class="">  209: 					}
+</span><span class="">  210: 				}
+</span><span class="">  211: 			}
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  212: 			if($right =~ /(\d{4})/) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_212_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="">  213: 				# BEF. 1932 &lt;=&gt; 2005-06-16
+</span><span class="">  214: 				my $ryear = $1;
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  215: 				if($left =~ /^bef/i) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_215_5: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  216: 					if($left =~ /(\d{4})/) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_216_6: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="survived-3 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch. Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one).">  217: 						if($1 &lt; $ryear) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 4, Killed: 0, Survived: 4)</summary>
+					<ul>
+				<li><b>NUM_BOUNDARY_217_13_>: Numeric boundary flip < to ></b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>NUM_BOUNDARY_217_13_<=: Numeric boundary flip < to <=</b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>NUM_BOUNDARY_217_13_>=: Numeric boundary flip < to >=</b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>COND_INV_217_7: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  218: 							return -1;
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>BOOL_NEGATE_218_8: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boolean branch test suggestion
+ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>RETURN_UNDEF_218_8: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Return value assertion
+is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
+</pre>
+								</div>
+							</li></ul></details>
+<span class="">  219: 						}
+</span><span class="">  220: 					}
+</span><span class="">  221: 				}
+</span><span class="">  222: 			}
+</span><span class="">  223: 			print STDERR &quot;$left &lt;=&gt; $right: not handled yet\n&quot;;
+</span><span class="">  224: 			my $i = 0;
+</span><span class="">  225: 			while((my @call_details = caller($i++))) {
+</span><span class="">  226: 				print STDERR &quot;\t&quot;, colored($call_details[2] . &#39; of &#39; . $call_details[1], &#39;red&#39;), &quot;\n&quot;;
+</span><span class="">  227: 			}
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  228: 			return 0;
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  229: 		}
+</span><span class="">  230: 
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  231: 		if($left =~ /^(Abt|ca?)\.?\s+(.+)/i) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  232: 			$left = $2;
+</span><span class="">  233: 		} elsif($left =~ /(.+?)\s?\?$/) {
+</span><span class="">  234: 			# &quot;1828 ?&quot;
+</span><span class="">  235: 			$left = $1;
+</span><span class="">  236: 		} elsif(($left =~ /\//) &amp;&amp; ($left =~ /^[a-z\/]+\s+(.+)/i)) {
+</span><span class="">  237: 			# e.g. &quot;Oct/Nov/Dec 1950&quot;
+</span><span class="">  238: 			$left = $1;
+</span><span class="">  239: 		}
+</span><span class="">  240: 
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  241: 		if(($left =~ /^\d{3,4}/) &amp;&amp; ($left !~ /\-/) &amp;&amp; ($right =~ /^\d{3,4}/) &amp;&amp; ($right !~ /\-/)) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  242: 			# e.g. 1929/06/26 &lt;=&gt; 1939
+</span><span class="">  243: 			$left =~ /^(\d{3,4})/;
+</span><span class="">  244: 			my $start = $1;
+</span><span class="">  245: 			$right =~ /^(\d{3,4})/;
+</span><span class="">  246: 			my $end = $1;
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  247: 			if($start != $end) {
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  248: 				return $start &lt;=&gt; $end;
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>BOOL_NEGATE_248_5: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boolean branch test suggestion
+ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>RETURN_UNDEF_248_5: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Return value assertion
+is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
+</pre>
+								</div>
+							</li></ul></details>
+<span class="">  249: 			}
+</span><span class="">  250: 		}
+</span><span class="">  251: 
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  252: 		if($left =~ /(\d{3,4})/) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_252_3: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="">  253: 			my $start = $1;
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  254: 			if(($left !~ /^bet/i) &amp;&amp; ($right =~ /^bet/)) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  255: 				if($right =~ /(\d{3,4})/) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_255_5: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="">  256: 					# e.g. 26 Aug 1744 &lt;=&gt; 1673-02-22T00:00:00
+</span><span class="">  257: 					my $end = $1;
+</span><span class="survived-2 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch. Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one).">  258: 					if($start != $end) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>NUM_BOUNDARY_258_16_==: Numeric boundary flip != to ==</b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>COND_INV_258_6: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  259: 						return $start &lt;=&gt; $end;
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>BOOL_NEGATE_259_7: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boolean branch test suggestion
+ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>RETURN_UNDEF_259_7: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Return value assertion
+is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
+</pre>
+								</div>
+							</li></ul></details>
+<span class="">  260: 					}
+</span><span class="">  261: 				}
+</span><span class="">  262: 			}
+</span><span class="">  263: 		}
+</span><span class="">  264: 
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  265: 		if($left =~ /^(\d{3,4})\sor\s(\d{3,4})$/) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  266: 			# e.g. &quot;1802 or 1803&quot;
+</span><span class="">  267: 			my($start, $end) = ($1, $2);
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  268: 			if($start == $end) {
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  269: 				$complain-&gt;(&quot;the years are the same &#39;$left&#39;&quot;) if($complain);
+</span><span class="">  270: 			}
+</span><span class="">  271: 			$left = $start
+</span><span class="">  272: 		} elsif(($left =~ /^(\d{3,4})\-(\d{3,4})$/) || ($left =~ /^Bet (\d{3,4})\sand\s(\d{3,4})$/i)) {
+</span><span class="">  273: 			# Comparing with a date range, e.g. &quot;BET 1830 AND 1832 &lt;=&gt; 1830-02-06&quot;
+</span><span class="">  274: 			my ($from, $to) = ($1, $2);
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  275: 			if($from == $to) {
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  276: 				$complain-&gt;(&quot;from == to, $from&quot;) if($complain);
+</span><span class="">  277: 				$left = $from;
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  278: 			} elsif($from &gt; $to) {
+</span><p> <b> Mutants (Total: 3, Killed: 3, Survived: 0)</b><p><span class="">  279: 				$complain-&gt;(&quot;datecmp(): $from &gt; $to in daterange &#39;$left&#39;&quot;) if($complain);
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  280: 				return 0;
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  281: 			} else {
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  282: 				if(ref($right)) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  283: 					$right = $right-&gt;year();
+</span><span class="">  284: 				}
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  285: 				if($right !~ /^\d{4}$/) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  286: 					my @r = $dfg-&gt;parse_datetime({ date =&gt; $right, quiet =&gt; 1 });
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  287: 					if(!defined($r[0])) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  288: 						if($right =~ /[\s\/](\d{4})$/) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_288_7: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="">  289: 							# e.g. cmp &quot;1891 &lt;=&gt; Oct/Nov/Dec 1892&quot;
+</span><span class="">  290: 							# or 5/27/1872
+</span><span class="">  291: 							my $year = $1;
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  292: 							if(ref($left)) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_292_8: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="survived-2 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch. Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one).">  293: 								if($left-&gt;year() != $year) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>NUM_BOUNDARY_293_26_==: Numeric boundary flip != to ==</b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>COND_INV_293_9: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  294: 									return $left-&gt;year() &lt;=&gt; $year;
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>BOOL_NEGATE_294_10: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boolean branch test suggestion
+ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>RETURN_UNDEF_294_10: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Return value assertion
+is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
+</pre>
+								</div>
+							</li></ul></details>
+<span class="">  295: 								}
+</span><span class="">  296: 							} else {
+</span><span class="survived-2 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch. Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one).">  297: 								if($left != $year) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>NUM_BOUNDARY_297_18_==: Numeric boundary flip != to ==</b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>COND_INV_297_9: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  298: 									return $left &lt;=&gt; $year;
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>BOOL_NEGATE_298_10: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boolean branch test suggestion
+ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>RETURN_UNDEF_298_10: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Return value assertion
+is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
+</pre>
+								</div>
+							</li></ul></details>
+<span class="">  299: 								}
+</span><span class="">  300: 							}
+</span><span class="">  301: 						}
+</span><span class="">  302: 						# TODO: throw an error that we can catch
+</span><span class="">  303: 						my $i = 0;
+</span><span class="">  304: 						while((my @call_details = caller($i++))) {
+</span><span class="">  305: 							print STDERR &quot;\t&quot;, colored($call_details[2] . &#39; of &#39; . $call_details[1], &#39;red&#39;), &quot;\n&quot;;
+</span><span class="">  306: 						}
+</span><span class="">  307: 						die &quot;Date parse failure: right = &#39;$right&#39; ($left &lt;=&gt; $right)&quot;;
+</span><span class="">  308: 					}
+</span><span class="">  309: 					$right = $r[0]-&gt;year();
+</span><span class="">  310: 				}
+</span><span class="">  311: 				# Comparing with a year only
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  312: 				if($right == $from) {
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  313: 					# &#39;1802-1803&#39; &lt;=&gt; &#39;1802&#39;
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  314: 					return 0;
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  315: 				}
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  316: 				if($right &lt; $from) {
+</span><p> <b> Mutants (Total: 4, Killed: 4, Survived: 0)</b><p><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  317: 					return 1;
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  318: 				}
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  319: 				if($right &gt; $to) {
+</span><p> <b> Mutants (Total: 4, Killed: 4, Survived: 0)</b><p><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  320: 					return -1;
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  321: 				}
+</span><span class="survived-2 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch. Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one).">  322: 				if($right == $from) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>NUM_BOUNDARY_322_15_!=: Numeric boundary flip == to !=</b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>COND_INV_322_5: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  323: 					return 0;
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>BOOL_NEGATE_323_6: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boolean branch test suggestion
+ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>RETURN_UNDEF_323_6: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Return value assertion
+is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
+</pre>
+								</div>
+							</li></ul></details>
+<span class="">  324: 				}
+</span><span class="survived-3 tooltip" data-tooltip="Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one). Mutation survived. Add targeted tests to validate this branch.">  325: 				if(($right &gt; $from) &amp;&amp; ($right &lt; $to)) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 7, Killed: 0, Survived: 7)</summary>
+					<ul>
+				<li><b>NUM_BOUNDARY_325_36_>: Numeric boundary flip < to ></b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>NUM_BOUNDARY_325_36_<=: Numeric boundary flip < to <=</b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>NUM_BOUNDARY_325_36_>=: Numeric boundary flip < to >=</b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>NUM_BOUNDARY_325_16_<: Numeric boundary flip > to <</b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>NUM_BOUNDARY_325_16_>=: Numeric boundary flip > to >=</b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>NUM_BOUNDARY_325_16_<=: Numeric boundary flip > to <=</b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>COND_INV_325_5: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="">  326: 					# E.g. &quot;BET 1900 AND 1902&quot; &lt;=&gt; 1901
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  327: 					return 0;
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  328: 				}
+</span><span class="survived-2 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch. Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one).">  329: 				if($right == $to) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>NUM_BOUNDARY_329_15_!=: Numeric boundary flip == to !=</b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>COND_INV_329_5: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="">  330: 					# E.g. &quot;BET 1830 AND 1832&quot; &lt;=&gt; 1832
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  331: 					return 0;
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  332: 				}
+</span><span class="">  333: 				print STDERR &quot;datecmp(): Can&#39;t compare $left with $right\n&quot;;
+</span><span class="">  334: 				my $i = 0;
+</span><span class="">  335: 				while((my @call_details = caller($i++))) {
+</span><span class="">  336: 					print STDERR &quot;\t&quot;, colored($call_details[2] . &#39; of &#39; . $call_details[1], &#39;red&#39;), &quot;\n&quot;;
+</span><span class="">  337: 				}
+</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  338: 				return 0;
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>BOOL_NEGATE_338_5: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boolean branch test suggestion
+ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>RETURN_UNDEF_338_5: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Return value assertion
+is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
+</pre>
+								</div>
+							</li></ul></details>
+<span class="">  339: 			}
+</span><span class="">  340: 		} elsif($left !~ /^\d{3,4}$/) {
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  341: 			if($left =~ /^\d{4}\-\d{2}\-\d{2}$/) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  342: 				# e.g. 1941-08-02
+</span><span class="">  343: 			} elsif(($left !~ /[a-z]/i) || ($left =~ /[a-z]$/)) {
+</span><span class="">  344: 				my $i = 0;
+</span><span class="">  345: 				while((my @call_details = caller($i++))) {
+</span><span class="">  346: 					print STDERR &quot;\t&quot;, colored($call_details[2] . &#39; of &#39; . $call_details[1], &#39;red&#39;), &quot;\n&quot;;
+</span><span class="">  347: 				}
+</span><span class="">  348: 				die &quot;Date parse failure: left = &#39;$left&#39; ($left &lt;=&gt; $right)&quot;;
+</span><span class="">  349: 			}
+</span><span class="">  350: 
+</span><span class="">  351: 			my @l = $dfg-&gt;parse_datetime({ date =&gt; $left, quiet =&gt; 1 });
+</span><span class="">  352: 			my $rc = $l[1] || $l[0];
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  353: 			if(!defined($rc)) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  354: 				my $i = 0;
+</span><span class="">  355: 				while((my @call_details = caller($i++))) {
+</span><span class="">  356: 					print STDERR &quot;\t&quot;, colored($call_details[2] . &#39; of &#39; . $call_details[1], &#39;red&#39;), &quot;\n&quot;;
+</span><span class="">  357: 				}
+</span><span class="">  358: 				die &quot;Date parse failure: left = &#39;$left&#39; ($left &lt;=&gt; $right)&quot;;
+</span><span class="">  359: 			}
+</span><span class="">  360: 			$left = $rc;
+</span><span class="">  361: 		}
+</span><span class="">  362: 	}
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic."><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">363 → 363 → 488</span></span>  363: 	if(!ref($right)) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  364: 		if($right =~ /^bef/i) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  365: 			if($left =~ /^\d+$/) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  366: 				# For example, comparing 1939 &lt;=&gt; bef 1 Jun 1965
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  367: 				if($right =~ /\s(\d+)$/) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_367_5: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  368: 					return $left &lt;=&gt; $1;
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>BOOL_NEGATE_368_6: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boolean branch test suggestion
+ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>RETURN_UNDEF_368_6: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Return value assertion
+is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
+</pre>
+								</div>
+							</li></ul></details>
+<span class="">  369: 				}
+</span><span class="">  370: 			}
+</span><span class="">  371: 			print STDERR &quot;$left &lt;=&gt; $right: Before not handled\n&quot;;
+</span><span class="">  372: 			my $i = 0;
+</span><span class="">  373: 			while((my @call_details = caller($i++))) {
+</span><span class="">  374: 				print STDERR &quot;\t&quot;, colored($call_details[2] . &#39; of &#39; . $call_details[1], &#39;red&#39;), &quot;\n&quot;;
+</span><span class="">  375: 			}
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  376: 			return 0;
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  377: 		}
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  378: 		if($right =~ /^(Abt|ca?)\.?\s+(.+)/i) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  379: 			$right = $2;
+</span><span class="">  380: 		} elsif($right =~ /(.+?)\s?\?$/) {
+</span><span class="">  381: 			# &quot;1828 ?&quot;
+</span><span class="">  382: 			$right = $1;
+</span><span class="">  383: 		} elsif(($right =~ /\//) &amp;&amp; ($right =~ /^[a-z\/]+\s+(.+)/i)) {
+</span><span class="">  384: 			# e.g. &quot;Oct/Nov/Dec 1950&quot;
+</span><span class="">  385: 			$right = $1;
+</span><span class="">  386: 		}
+</span><span class="">  387: 
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  388: 		if($right =~ /^\d{3,4}$/) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  389: 			if(ref($left)) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  390: 				return $left-&gt;year() &lt;=&gt; $right;
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  391: 			}
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  392: 			return $left &lt;=&gt; $right;
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  393: 		}
+</span><span class="">  394: 
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  395: 		if(($right =~ /^(\d{3,4})\-(\d{3,4})$/) || ($right =~ /^Bet (\d{3,4})\sand\s(\d{3,4})$/i)) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  396: 			# Comparing with a date range
+</span><span class="">  397: 			my ($from, $to) = ($1, $2);
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  398: 			if($from == $to) {
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  399: 				$complain-&gt;(&quot;from == to, $from&quot;) if($complain);
+</span><span class="">  400: 				# Return immediately: setting $right to a bare integer and
+</span><span class="">  401: 				# falling through would reach the DFG path, which cannot
+</span><span class="">  402: 				# parse an integer and would die.
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  403: 				if(ref($left)) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  404: 					return $left-&gt;year() &lt;=&gt; $from;
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>BOOL_NEGATE_404_6: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boolean branch test suggestion
+ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>RETURN_UNDEF_404_6: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Return value assertion
+is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
+</pre>
+								</div>
+							</li></ul></details>
+<span class="">  405: 				}
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  406: 				return $left &lt;=&gt; $from;
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  407: 			} elsif($from &gt; $to) {
+</span><p> <b> Mutants (Total: 3, Killed: 3, Survived: 0)</b><p><span class="">  408: 				print STDERR &quot;datecmp(): $from &gt; $to in daterange &#39;$right&#39;\n&quot;;
+</span><span class="">  409: 				my $i = 0;
+</span><span class="">  410: 				while((my @call_details = caller($i++))) {
+</span><span class="">  411: 					print STDERR &quot;\t&quot;, colored($call_details[2] . &#39; of &#39; . $call_details[1], &#39;red&#39;), &quot;\n&quot;;
+</span><span class="">  412: 				}
+</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  413: 				return 0;
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>BOOL_NEGATE_413_5: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boolean branch test suggestion
+ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>RETURN_UNDEF_413_5: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Return value assertion
+is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
+</pre>
+								</div>
+							</li></ul></details>
+<span class="">  414: 			} else {
+</span><span class="">  415: 				# Comparing with a year only
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  416: 				if(ref($left)) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="">  417: 					$left = $left-&gt;year();
+</span><span class="">  418: 				}
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  419: 				if($left == $to) {
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  420: 					# 1832 &lt;=&gt; BET 1830 AND 1832
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  421: 					return 0;
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  422: 				}
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  423: 				if($left &lt; $from) {
+</span><p> <b> Mutants (Total: 4, Killed: 4, Survived: 0)</b><p><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  424: 					return -1;
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  425: 				}
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  426: 				if($left &gt; $to) {
+</span><p> <b> Mutants (Total: 4, Killed: 4, Survived: 0)</b><p><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  427: 					return 1;
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  428: 				}
+</span><span class="survived-2 tooltip" data-tooltip="Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one). Mutation survived. Add targeted tests to validate this branch.">  429: 				if($left == $from) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>NUM_BOUNDARY_429_14_!=: Numeric boundary flip == to !=</b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>COND_INV_429_5: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  430: 					return 0;
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  431: 				}
+</span><span class="survived-3 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch. Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one).">  432: 				if(($left &gt; $from) &amp;&amp; ($left &lt; $to)) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 7, Killed: 0, Survived: 7)</summary>
+					<ul>
+				<li><b>NUM_BOUNDARY_432_34_>: Numeric boundary flip < to ></b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>NUM_BOUNDARY_432_34_<=: Numeric boundary flip < to <=</b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>NUM_BOUNDARY_432_34_>=: Numeric boundary flip < to >=</b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>NUM_BOUNDARY_432_15_<: Numeric boundary flip > to <</b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>NUM_BOUNDARY_432_15_>=: Numeric boundary flip > to >=</b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>NUM_BOUNDARY_432_15_<=: Numeric boundary flip > to <=</b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>COND_INV_432_5: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="">  433: 					# E.g. 1901 &lt;=&gt; &quot;BET 1900 AND 1902&quot;
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  434: 					return 0;
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  435: 				}
+</span><span class="">  436: 				print STDERR &quot;datecmp(): Can&#39;t compare $left with $right\n&quot;;
+</span><span class="">  437: 				my $i = 0;
+</span><span class="">  438: 				while((my @call_details = caller($i++))) {
+</span><span class="">  439: 					print STDERR &quot;\t&quot;, colored($call_details[2] . &#39; of &#39; . $call_details[1], &#39;red&#39;), &quot;\n&quot;;
+</span><span class="">  440: 				}
+</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  441: 				return 0;
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>BOOL_NEGATE_441_5: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boolean branch test suggestion
+ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>RETURN_UNDEF_441_5: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Return value assertion
+is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
+</pre>
+								</div>
+							</li></ul></details>
+<span class="">  442: 			}
+</span><span class="">  443: 		}
+</span><span class="">  444: 
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  445: 		if($left =~ /(\d{3,4})/) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_445_3: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="">  446: 			my $start = $1;
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  447: 			if($right =~ /(\d{3,4})/) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_447_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="">  448: 				# e.g. 26 Aug 1744 &lt;=&gt; 1673-02-22T00:00:00
+</span><span class="">  449: 				my $end = $1;
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  450: 				if($start != $end) {
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  451: 					return $start &lt;=&gt; $end;
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  452: 				}
+</span><span class="">  453: 			}
+</span><span class="">  454: 		}
+</span><span class="">  455: 
+</span><span class="">  456: 		# if(!$dfg-&gt;parse_datetime($right)) {
+</span><span class="">  457: 			# my $i = 0;
+</span><span class="">  458: 			# while((my @call_details = caller($i++))) {
+</span><span class="">  459: 				# print STDERR &quot;\t&quot;, colored($call_details[2] . &#39; of &#39; . $call_details[1], &#39;red&#39;), &quot;\n&quot;;
+</span><span class="">  460: 			# }
+</span><span class="">  461: 			# die join(&#39;&lt;=&gt;&#39;, @_);
+</span><span class="">  462: 		# }
+</span><span class="">  463: 		my @r = $dfg-&gt;parse_datetime({ date =&gt; $right, quiet =&gt; 1 });
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  464: 		if(!defined($r[0])) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch.">  465: 			if($right =~ /[\s\/](\d{4})$/) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_465_4: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="">  466: 				# e.g. cmp &quot;1891 &lt;=&gt; Oct/Nov/Dec 1892&quot;
+</span><span class="">  467: 				# or 5/27/1872
+</span><span class="">  468: 				my $year = $1;
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  469: 				if(ref($left)) {
+</span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="survived-2 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch. Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one).">  470: 					if($left-&gt;year() != $year) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>NUM_BOUNDARY_470_23_==: Numeric boundary flip != to ==</b><br>HIGH: Likely missing edge-case test (boundary value)
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boundary test suggestion
+is( func(VALUE_AT_BOUNDARY), EXPECTED, &#39;Test boundary behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>COND_INV_470_6: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  471: 						return $left-&gt;year() &lt;=&gt; $year;
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>BOOL_NEGATE_471_7: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boolean branch test suggestion
+ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>RETURN_UNDEF_471_7: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Return value assertion
+is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
+</pre>
+								</div>
+							</li></ul></details>
+<span class="">  472: 					}
+</span><span class="">  473: 				} else {
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  474: 					if($left != $year) {
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  475: 						return $left &lt;=&gt; $year;
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>BOOL_NEGATE_475_7: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boolean branch test suggestion
+ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>RETURN_UNDEF_475_7: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Return value assertion
+is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
+</pre>
+								</div>
+							</li></ul></details>
+<span class="">  476: 					}
+</span><span class="">  477: 				}
+</span><span class="">  478: 			}
+</span><span class="">  479: 			# TODO: throw an error that we can catch
+</span><span class="">  480: 			my $i = 0;
+</span><span class="">  481: 			while((my @call_details = caller($i++))) {
+</span><span class="">  482: 				print STDERR &quot;\t&quot;, colored($call_details[2] . &#39; of &#39; . $call_details[1], &#39;red&#39;), &quot;\n&quot;;
+</span><span class="">  483: 			}
+</span><span class="">  484: 			die &quot;Date parse failure: right = &#39;$right&#39; ($left &lt;=&gt; $right)&quot;;
+</span><span class="">  485: 		}
+</span><span class="">  486: 		$right = $r[0];
+</span><span class="">  487: 	}
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">488 → 488 → 491</span></span>  488: 	if((!ref($left)) &amp;&amp; ref($right)) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_488_2: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  489: 		return $left &lt;=&gt; $right-&gt;year();
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>BOOL_NEGATE_489_3: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boolean branch test suggestion
+ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>RETURN_UNDEF_489_3: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Return value assertion
+is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
+</pre>
+								</div>
+							</li></ul></details>
+<span class="">  490: 	}
+</span><span class="survived-1 tooltip" data-tooltip="Mutation survived. Add targeted tests to validate this branch."><span class="lcsaj-tip"><span class="lcsaj-dot">●</span><span class="lcsaj-tip-text">491 → 491 → 495</span></span>  491: 	if(ref($left) &amp;&amp; (!ref($right))) {
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 1, Killed: 0, Survived: 1)</summary>
+					<ul>
+				<li><b>COND_INV_491_2: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
+</li></ul></details>
+<span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  492: 		return $left-&gt;year() &lt;=&gt; $right;
+</span>
+					<details class="mutant-details">
+					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
+					<ul>
+				<li><b>BOOL_NEGATE_492_3: Negate boolean return expression</b><br>MEDIUM: Add tests asserting both true and false outcomes
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Boolean branch test suggestion
+ok( !func(INPUT), &#39;Verify boolean branch behaviour&#39; );
+</pre>
+								</div>
+							</li><li><b>RETURN_UNDEF_492_3: Replace return expression with undef</b><br>LOW: Mutation survived, but impact may be minor
+
+								<div class="suggested-test">
+								<div class="suggest-label">🧪 Suggested Test</div>
+								<pre># Return value assertion
+is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
+</pre>
+								</div>
+							</li></ul></details>
+<span class="">  493: 	}
+</span><span class="">  494: 
+</span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  495: 	return $left &lt;=&gt; $right;
+</span><p> <b> Mutants (Total: 2, Killed: 2, Survived: 0)</b><p><span class="">  496: }
+</span><span class="">  497: 
+</span><span class="">  498: =head1 AUTHOR
+</span><span class="">  499: 
+</span><span class="">  500: Nigel Horne, C&lt;&lt; &lt;njh at nigelhorne.com&gt; &gt;&gt;
+</span><span class="">  501: 
+</span><span class="">  502: =head1 SEE ALSO
+</span><span class="">  503: 
+</span><span class="">  504: =over 4
+</span><span class="">  505: 
+</span><span class="">  506: =item * L&lt;Test Dashboard|https://nigelhorne.github.io/Date-Cmp/coverage/&gt;
+</span><span class="">  507: 
+</span><span class="">  508: =item * L&lt;Sort::Key::DateTime&gt;
+</span><span class="">  509: 
+</span><span class="">  510: =back
+</span><span class="">  511: 
+</span><span class="">  512: =head1 SUPPORT
+</span><span class="">  513: 
+</span><span class="">  514: This module is provided as-is without any warranty.
+</span><span class="">  515: 
+</span><span class="">  516: Please report any bugs or feature requests to C&lt;bug-date-cmp at rt.cpan.org&gt;,
+</span><span class="">  517: or through the web interface at
+</span><span class="">  518: L&lt;http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Date-Cmp&gt;.
+</span><span class="">  519: I will be notified, and then you&#39;ll
+</span><span class="">  520: automatically be notified of progress on your bug as I make changes.
+</span><span class="">  521: 
+</span><span class="">  522: You can find documentation for this module with the perldoc command.
+</span><span class="">  523: 
+</span><span class="">  524:     perldoc Date::Cmp
+</span><span class="">  525: 
+</span><span class="">  526: =encoding utf-8
+</span><span class="">  527: 
+</span><span class="">  528: =head1 FORMAL SPECIFICATION
+</span><span class="">  529: 
+</span><span class="">  530: =head2 datecmp
+</span><span class="">  531: 
+</span><span class="">  532:     [DATESTR, DIAGMSG]
+</span><span class="">  533: 
+</span><span class="">  534:     DATE ::= exact&acirc;&#159;&uml;year: &acirc;&#132;&#149;&acirc;&#159;&copy;
+</span><span class="">  535:            | approx&acirc;&#159;&uml;year: &acirc;&#132;&#149;&acirc;&#159;&copy;
+</span><span class="">  536:            | before&acirc;&#159;&uml;year: &acirc;&#132;&#149;&acirc;&#159;&copy;
+</span><span class="">  537:            | after&acirc;&#159;&uml;year: &acirc;&#132;&#149;&acirc;&#159;&copy;
+</span><span class="">  538:            | range&acirc;&#159;&uml;from: &acirc;&#132;&#149;; to: &acirc;&#132;&#149;&acirc;&#159;&copy;
+</span><span class="">  539:            | invalid
+</span><span class="">  540: 
+</span><span class="">  541:     COMPARISON ::= lt | eq | gt | error
+</span><span class="">  542: 
+</span><span class="">  543:     DateCmp
+</span><span class="">  544:     left?, right?: DATESTR
+</span><span class="">  545:     diagnostic!: &acirc;&#132;&#153; DIAGMSG
+</span><span class="">  546:     result!: COMPARISON
+</span><span class="">  547: 
+</span><span class="">  548:     &acirc;&#136;&#128;d: DATESTR @ validDate(d)
+</span><span class="">  549: 
+</span><span class="">  550:     &acirc;&#137;&#153;
+</span><span class="">  551:     &acirc;&#136;&#131; l, r: DATE &acirc;&#128;&cent;
+</span><span class="">  552:         l = parse(left?) &acirc;&#136;&sect; r = parse(right?) &acirc;&#136;&sect;
+</span><span class="">  553:         (
+</span><span class="">  554:           (l = invalid &acirc;&#136;&uml; r = invalid &acirc;&#135;&#146; result! = error) &acirc;&#136;&sect;
+</span><span class="">  555:           (l = r &acirc;&#135;&#146; result! = eq) &acirc;&#136;&sect;
+</span><span class="">  556:           (compare(l, r, diagnostic!) = -1 &acirc;&#135;&#146; result! = lt) &acirc;&#136;&sect;
+</span><span class="">  557:           (compare(l, r, diagnostic!) = 0 &acirc;&#135;&#146; result! = eq) &acirc;&#136;&sect;
+</span><span class="">  558:           (compare(l, r, diagnostic!) = 1 &acirc;&#135;&#146; result! = gt)
+</span><span class="">  559:         )
+</span><span class="">  560: 
+</span><span class="">  561: =head1 LICENCE AND COPYRIGHT
+</span><span class="">  562: 
+</span><span class="">  563: Copyright 2025-2026 Nigel Horne.
+</span><span class="">  564: 
+</span><span class="">  565: Usage is subject to the GPL2 licence terms.
+</span><span class="">  566: If you use it,
+</span><span class="">  567: please let me know.
+</span><span class="">  568: 
+</span><span class="">  569: =cut
+</span><span class="">  570: 
+</span><span class="">  571: 1;
+</span></pre>
+
+<script>
+function toggleTheme() {
+    const html = document.documentElement;
+    const current = html.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+}
+
+(function() {
+    const saved = localStorage.getItem('theme');
+    if(saved) {
+        document.documentElement.setAttribute('data-theme', saved);
+    }
+})();
+
+document.addEventListener("mousemove", function(e) {
+	document.querySelectorAll(".lcsaj-tip-text").forEach(function(tip) {
+		tip.style.left = (e.clientX + 12) + "px";
+		tip.style.top  = (e.clientY + 12) + "px";
+	});
+});
+</script>
+</body>
+</html>
+	
