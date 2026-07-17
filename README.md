@@ -69,7 +69,32 @@ In cases where a date cannot be parsed or compared meaningfully, diagnostic mess
 will be printed to STDERR, and the function may die with an error. Callbacks and
 stack traces are used to help identify parsing issues.
 
-## FORMAL SPECIFICATION
+# AUTHOR
+
+Nigel Horne, `<njh at nigelhorne.com>`
+
+# SEE ALSO
+
+- [Test Dashboard](https://nigelhorne.github.io/Date-Cmp/coverage/)
+- [Sort::Key::DateTime](https://metacpan.org/pod/Sort%3A%3AKey%3A%3ADateTime)
+
+# SUPPORT
+
+This module is provided as-is without any warranty.
+
+Please report any bugs or feature requests to `bug-date-cmp at rt.cpan.org`,
+or through the web interface at
+[http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Date-Cmp](http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Date-Cmp).
+I will be notified, and then you'll
+automatically be notified of progress on your bug as I make changes.
+
+You can find documentation for this module with the perldoc command.
+
+    perldoc Date::Cmp
+
+# FORMAL SPECIFICATION
+
+## datecmp
 
     [DATESTR, DIAGMSG]
 
@@ -99,29 +124,6 @@ stack traces are used to help identify parsing issues.
           (compare(l, r, diagnostic!) = 0 ⇒ result! = eq) ∧
           (compare(l, r, diagnostic!) = 1 ⇒ result! = gt)
         )
-
-# AUTHOR
-
-Nigel Horne, `<njh at nigelhorne.com>`
-
-# SEE ALSO
-
-- [Test Dashboard](https://nigelhorne.github.io/Date-Cmp/coverage/)
-- [Sort::Key::DateTime](https://metacpan.org/pod/Sort%3A%3AKey%3A%3ADateTime)
-
-# SUPPORT
-
-This module is provided as-is without any warranty.
-
-Please report any bugs or feature requests to `bug-date-cmp at rt.cpan.org`,
-or through the web interface at
-[http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Date-Cmp](http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Date-Cmp).
-I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
-
-You can find documentation for this module with the perldoc command.
-
-    perldoc Date::Cmp
 
 # LICENCE AND COPYRIGHT
 

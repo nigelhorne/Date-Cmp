@@ -23,7 +23,6 @@ use Readonly;
 use File::Spec;
 
 use FindBin;
-use lib "$FindBin::Bin/../lib";
 
 use Date::Cmp qw(datecmp);
 

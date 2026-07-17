@@ -15,8 +15,6 @@ our @EXPORT_OK = qw(datecmp);
 
 our $dfg = DateTime::Format::Genealogy->new();
 
-=encoding utf-8
-
 =head1 NAME
 
 Date::Cmp - Compare two dates with approximate parsing support
@@ -110,37 +108,6 @@ including:
 In cases where a date cannot be parsed or compared meaningfully, diagnostic messages
 will be printed to STDERR, and the function may die with an error. Callbacks and
 stack traces are used to help identify parsing issues.
-
-=head2 FORMAL SPECIFICATION
-
-    [DATESTR, DIAGMSG]
-
-    DATE ::= exact⟨year: ℕ⟩
-           | approx⟨year: ℕ⟩
-           | before⟨year: ℕ⟩
-           | after⟨year: ℕ⟩
-           | range⟨from: ℕ; to: ℕ⟩
-           | invalid
-
-    COMPARISON ::= lt | eq | gt | error
-
-    DateCmp
-    left?, right?: DATESTR
-    diagnostic!: ℙ DIAGMSG
-    result!: COMPARISON
-
-    ∀d: DATESTR @ validDate(d)
-
-    ≙
-    ∃ l, r: DATE •
-        l = parse(left?) ∧ r = parse(right?) ∧
-        (
-          (l = invalid ∨ r = invalid ⇒ result! = error) ∧
-          (l = r ⇒ result! = eq) ∧
-          (compare(l, r, diagnostic!) = -1 ⇒ result! = lt) ∧
-          (compare(l, r, diagnostic!) = 0 ⇒ result! = eq) ∧
-          (compare(l, r, diagnostic!) = 1 ⇒ result! = gt)
-        )
 
 =cut
 
@@ -555,6 +522,41 @@ automatically be notified of progress on your bug as I make changes.
 You can find documentation for this module with the perldoc command.
 
     perldoc Date::Cmp
+
+=encoding utf-8
+
+=head1 FORMAL SPECIFICATION
+
+=head2 datecmp
+
+    [DATESTR, DIAGMSG]
+
+    DATE ::= exact⟨year: ℕ⟩
+           | approx⟨year: ℕ⟩
+           | before⟨year: ℕ⟩
+           | after⟨year: ℕ⟩
+           | range⟨from: ℕ; to: ℕ⟩
+           | invalid
+
+    COMPARISON ::= lt | eq | gt | error
+
+    DateCmp
+    left?, right?: DATESTR
+    diagnostic!: ℙ DIAGMSG
+    result!: COMPARISON
+
+    ∀d: DATESTR @ validDate(d)
+
+    ≙
+    ∃ l, r: DATE •
+        l = parse(left?) ∧ r = parse(right?) ∧
+        (
+          (l = invalid ∨ r = invalid ⇒ result! = error) ∧
+          (l = r ⇒ result! = eq) ∧
+          (compare(l, r, diagnostic!) = -1 ⇒ result! = lt) ∧
+          (compare(l, r, diagnostic!) = 0 ⇒ result! = eq) ∧
+          (compare(l, r, diagnostic!) = 1 ⇒ result! = gt)
+        )
 
 =head1 LICENCE AND COPYRIGHT
 
