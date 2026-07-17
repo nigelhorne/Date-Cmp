@@ -203,6 +203,26 @@ sub datecmp
 		$right = $right->{'date'};
 	}
 
+	# A hashref without a 'date' key (or with undef as its value) arrives
+	# here as undef. Any surviving reference type must also be rejected
+	# before string operations silently stringify it.
+	if(!defined($left) || !defined($right)) {
+		print STDERR "\n";
+		print STDERR "left date is undefined after input normalisation\n" if !defined($left);
+		print STDERR "right date is undefined after input normalisation\n" if !defined($right);
+		my $i = 0;
+		while((my @call_details = caller($i++))) {
+			print STDERR "\t", colored($call_details[2] . ' of ' . $call_details[1], 'red'), "\n";
+		}
+		return 0;
+	}
+	if(ref($left)) {
+		die 'Date parse failure: left is an unsupported reference type (' . ref($left) . ')';
+	}
+	if(ref($right)) {
+		die 'Date parse failure: right is an unsupported reference type (' . ref($right) . ')';
+	}
+
 	return 0 if($left eq $right);
 
 	if($left !~ /^[A-S0-9]/i) {
@@ -220,6 +240,15 @@ sub datecmp
 			print STDERR "\t", colored($call_details[2] . ' of ' . $call_details[1], 'red'), "\n";
 		}
 		die "Date parse failure: right = '$right'";
+	}
+
+	# Reject bare integers with 5+ digits — they are not valid year strings and
+	# the fast-path regexes would silently extract the wrong 4-digit substring.
+	if($left =~ /^\d{5,}$/) {
+		die "Date parse failure: left = '$left' (year must be 3-4 digits)";
+	}
+	if($right =~ /^\d{5,}$/) {
+		die "Date parse failure: right = '$right' (year must be 3-4 digits)";
 	}
 
 	if((!ref($left)) && (!ref($right)) && ($left =~ /\d{3,4}/) && ($right =~ /\d{3,4}/) && ($left !~ /^bet/i) && ($left !~ /\-/) && ($right !~ /^bet/i) && ($right !~ /^\d{3,4}\-\d{3,4}$/)) {
