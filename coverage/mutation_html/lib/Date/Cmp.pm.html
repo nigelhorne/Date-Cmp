@@ -308,51 +308,51 @@ Approximate LCSAJ segments: 185<br>
 </span><span class="">   16: use Exporter qw(import);
 </span><span class="">   17: our @EXPORT_OK = qw(datecmp);
 </span><span class="">   18: 
-</span><span class="">   19: =head1 NAME
+</span><span class="">   19: =encoding utf-8
 </span><span class="">   20: 
-</span><span class="">   21: Date::Cmp - Compare two dates with approximate parsing support
+</span><span class="">   21: =head1 NAME
 </span><span class="">   22: 
-</span><span class="">   23: =head1 VERSION
+</span><span class="">   23: Date::Cmp - Compare two dates with approximate parsing support
 </span><span class="">   24: 
-</span><span class="">   25: Version 0.05
+</span><span class="">   25: =head1 VERSION
 </span><span class="">   26: 
-</span><span class="">   27: =cut
+</span><span class="">   27: Version 0.06
 </span><span class="">   28: 
-</span><span class="">   29: our $VERSION = &#39;0.05&#39;;
+</span><span class="">   29: =cut
 </span><span class="">   30: 
-</span><span class="">   31: # Singleton DFG parser reused across calls for speed.  Tests may swap it
-</span><span class="">   32: # with a mock under &quot;local $Date::Cmp::dfg = MockDFG-&gt;new()&quot;.
-</span><span class="">   33: our $dfg = DateTime::Format::Genealogy-&gt;new();
-</span><span class="">   34: 
-</span><span class="">   35: =head1 SYNOPSIS
+</span><span class="">   31: our $VERSION = &#39;0.06&#39;;
+</span><span class="">   32: 
+</span><span class="">   33: # Singleton DFG parser reused across calls for speed.  Tests may swap it
+</span><span class="">   34: # with a mock under &quot;local $Date::Cmp::dfg = MockDFG-&gt;new()&quot;.
+</span><span class="">   35: our $dfg = DateTime::Format::Genealogy-&gt;new();
 </span><span class="">   36: 
-</span><span class="">   37:   use Date::Cmp qw(datecmp);
+</span><span class="">   37: =head1 SYNOPSIS
 </span><span class="">   38: 
-</span><span class="">   39:   my $cmp = datecmp(&#39;1914&#39;, &#39;1918&#39;);            # -1 (1914 is earlier)
-</span><span class="">   40:   my $cmp = datecmp(&#39;Abt. 1850&#39;, &#39;1855&#39;);       # -1
-</span><span class="">   41:   my $cmp = datecmp(&#39;BET 1830 AND 1832&#39;, &#39;1831&#39;); # 0 (within range)
-</span><span class="">   42: 
-</span><span class="">   43:   # Optional complaint callback for ambiguous range edge-cases:
-</span><span class="">   44:   $cmp = datecmp(&#39;1996-2000&#39;, &#39;1996&#39;,
-</span><span class="">   45:       sub { warn &quot;ambiguous: @_&quot; });
-</span><span class="">   46: 
-</span><span class="">   47: =head1 DESCRIPTION
+</span><span class="">   39:   use Date::Cmp qw(datecmp);
+</span><span class="">   40: 
+</span><span class="">   41:   my $cmp = datecmp(&#39;1914&#39;, &#39;1918&#39;);            # -1 (1914 is earlier)
+</span><span class="">   42:   my $cmp = datecmp(&#39;Abt. 1850&#39;, &#39;1855&#39;);       # -1
+</span><span class="">   43:   my $cmp = datecmp(&#39;BET 1830 AND 1832&#39;, &#39;1831&#39;); # 0 (within range)
+</span><span class="">   44: 
+</span><span class="">   45:   # Optional complaint callback for ambiguous range edge-cases:
+</span><span class="">   46:   $cmp = datecmp(&#39;1996-2000&#39;, &#39;1996&#39;,
+</span><span class="">   47:       sub { warn &quot;ambiguous: @_&quot; });
 </span><span class="">   48: 
-</span><span class="">   49: C&lt;Date::Cmp&gt; provides a single exported function, C&lt;datecmp&gt;, which compares
-</span><span class="">   50: two date strings or date-like objects, returning a numeric result like Perl&#39;s
-</span><span class="">   51: C&lt;&lt; &lt;=&gt; &gt;&gt; operator.
-</span><span class="">   52: 
-</span><span class="">   53: The comparison handles approximate dates (C&lt;Abt. 1902&gt;, C&lt;BET 1830 AND 1832&gt;,
-</span><span class="">   54: C&lt;Oct/Nov/Dec 1950&gt;), partial dates (year-only), and the common genealogy
-</span><span class="">   55: qualifiers C&lt;BEF&gt; and C&lt;AFT&gt;.  Exact parsing delegates to
-</span><span class="">   56: L&lt;DateTime::Format::Genealogy&gt;; a cascade of fast-path heuristics handles
-</span><span class="">   57: the most common year-only comparisons without invoking the heavier parser.
-</span><span class="">   58: 
-</span><span class="">   59: =head1 FUNCTIONS
+</span><span class="">   49: =head1 DESCRIPTION
+</span><span class="">   50: 
+</span><span class="">   51: C&lt;Date::Cmp&gt; provides a single exported function, C&lt;datecmp&gt;, which compares
+</span><span class="">   52: two date strings or date-like objects, returning a numeric result like Perl&#39;s
+</span><span class="">   53: C&lt;&lt; &lt;=&gt; &gt;&gt; operator.
+</span><span class="">   54: 
+</span><span class="">   55: The comparison handles approximate dates (C&lt;Abt. 1902&gt;, C&lt;BET 1830 AND 1832&gt;,
+</span><span class="">   56: C&lt;Oct/Nov/Dec 1950&gt;), partial dates (year-only), and the common genealogy
+</span><span class="">   57: qualifiers C&lt;BEF&gt; and C&lt;AFT&gt;.  Exact parsing delegates to
+</span><span class="">   58: L&lt;DateTime::Format::Genealogy&gt;; a cascade of fast-path heuristics handles
+</span><span class="">   59: the most common year-only comparisons without invoking the heavier parser.
 </span><span class="">   60: 
-</span><span class="">   61: =head2 datecmp
+</span><span class="">   61: =head1 FUNCTIONS
 </span><span class="">   62: 
-</span><span class="">   63: =encoding utf-8
+</span><span class="">   63: =head2 datecmp
 </span><span class="">   64: 
 </span><span class="">   65: =head3 Purpose
 </span><span class="">   66: 
@@ -665,7 +665,7 @@ Approximate LCSAJ segments: 185<br>
 </span><span class="">  373: # &acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;&acirc;&#148;&#128;
 </span><span class="">  374: sub _sanitize_for_diag {
 </span><span class="">  375: 	my ($val) = @_;
-</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  376: 	return &#39;(undef)&#39; if !defined $val;
+</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  376: 	return &#39;(undef)&#39; if !defined $val;
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
@@ -688,7 +688,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 								</div>
 							</li></ul></details>
 <span class="">  377: 	(my $safe = substr($val, 0, 200)) =~ s/[^\x20-\x7E]/./g;
-</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  378: 	return $safe;
+</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  378: 	return $safe;
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 2, Killed: 0, Survived: 2)</summary>
@@ -870,7 +870,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class="">  530: 			my $ryear = $2;
 </span><span class="">  531: 			$left =~ /(^|[\s\/])(\d{4})$/;
 </span><span class="">  532: 			my $lyear = $2;
-</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  533: 			return $lyear &lt;=&gt; $ryear if $lyear != $ryear;
+</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  533: 			return $lyear &lt;=&gt; $ryear if $lyear != $ryear;
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 3, Killed: 1, Survived: 2)</summary>
@@ -918,7 +918,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 					<ul>
 				<li><b>COND_INV_547_5: Invert condition if to unless</b><br>MEDIUM: Add tests asserting both true and false outcomes
 </li></ul></details>
-<span class="survived-3 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one). Return value mutation survived. Add tests asserting exact return values.">  548: 					return -1 if $1 &lt; $ryear;
+<span class="survived-3 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boundary mutation survived. Add tests around edge values (e.g. min, max, off-by-one). Boolean logic mutation survived. Add tests covering both true and false paths.">  548: 					return -1 if $1 &lt; $ryear;
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 5, Killed: 0, Survived: 5)</summary>
@@ -1193,7 +1193,7 @@ is( func(INPUT), EXPECTED, &#39;Verify correct return value&#39; );
 </span><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  736: 				if(ref($left)) {
 </span><p> <b> Mutants (Total: 1, Killed: 1, Survived: 0)</b><p><span class="killed tooltip" data-tooltip="Mutations here were killed. Tests are effectively covering this logic.">  737: 					return $left-&gt;year() &lt;=&gt; $year if $left-&gt;year() != $year;
 </span><p> <b> Mutants (Total: 3, Killed: 3, Survived: 0)</b><p><span class="">  738: 				} else {
-</span><span class="survived-2 tooltip" data-tooltip="Return value mutation survived. Add tests asserting exact return values. Boolean logic mutation survived. Add tests covering both true and false paths.">  739: 					return $left &lt;=&gt; $year if $left != $year;
+</span><span class="survived-2 tooltip" data-tooltip="Boolean logic mutation survived. Add tests covering both true and false paths. Return value mutation survived. Add tests asserting exact return values.">  739: 					return $left &lt;=&gt; $year if $left != $year;
 </span>
 					<details class="mutant-details">
 					<summary>Mutants (Total: 3, Killed: 1, Survived: 2)</summary>
