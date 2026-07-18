@@ -25,14 +25,12 @@
 use strict;
 use warnings;
 
+use FindBin;
 use Test::Most;
 use Test::Returns;
 use Test::Mockingbird;
 use Test::Without::Module ();    # imported on demand inside tests
 use Readonly;
-
-use FindBin;
-use lib "$FindBin::Bin/../lib";
 
 use File::Spec;
 

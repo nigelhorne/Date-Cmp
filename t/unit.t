@@ -13,9 +13,6 @@ use Test::Mockingbird;
 use Test::Returns;
 use Readonly;
 
-use FindBin;
-use lib "$FindBin::Bin/../lib";
-
 use Date::Cmp qw(datecmp);
 use File::Spec;
 use Scalar::Util qw(blessed);

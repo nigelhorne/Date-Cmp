@@ -24,9 +24,11 @@ WriteMakefile(
 		'ExtUtils::MakeMaker' => 6.64,	# Minimum version for TEST_REQUIRES
 		'Carp' => 0,
 		'DateTime::Format::Genealogy' => 0.11,
+		'Readonly' => 0,
 		'Scalar::Util' => 0,
 		'Term::ANSIColor' => 0
 	}, TEST_REQUIRES => {
+		'FindBin' => 0,
 		'IPC::System::Simple' => 0,
 		'Test::DescribeMe' => 0,
 		'Test::Memory::Cycle' => 0,

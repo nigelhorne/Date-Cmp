@@ -451,60 +451,38 @@ subtest 'plain left, DateTime right from DFG success (line 576)' => sub {
 };
 
 # =========================================================================
-# 10. Dead code inventory (no executable assertions — documentation only)
+# 10. Former dead-code inventory — all regions REMOVED in critique refactor
 #
-#     The following lines in lib/Date/Cmp.pm are unreachable by any real
-#     input and should be reviewed for removal:
+#     The following 9 dead-code regions previously catalogued in this file
+#     have been removed from lib/Date/Cmp.pm as part of the /critique
+#     refactoring (2026-07-18):
 #
-#     Line 288  ("return $lyear <=> $ryear" in fast-path 3): fast-paths 1
-#               and 2 handle all different-year cases before fast-path 3
-#               can differ; when fast-paths 1&2 tie, fast-path 3 ties too.
+#     * fast-path 3 early return (was line 288)
+#     * BEF left, 4-digit right second /(\d{4})/ branch (was lines 305-307)
+#     * return after prefix-strip when years tie (was line 337)
+#     * ref($right) guard inside BET LHS range else-branch (was line 372)
+#     * duplicate "if($right==$from){return 0}" in BET LHS range (was 409-411)
+#     * STDERR fallback at end of BET LHS range else-branch (was 420-426)
+#     * STDERR fallback at end of BET RHS range else-branch (was 523-528)
+#     * plain-left DFG-fail-right year-differs path (was lines 561-562)
+#     * ref(left) && !ref(right) final guard (was lines 578-579)
 #
-#     Lines 294-297 are REACHABLE (covered by subtest 1 above) — correction
-#               to earlier analysis.
+#     The range-comparison bodies in both handlers are now the canonical
+#     3-line early-return form:
+#         return 1 if $right < $from;
+#         return -1 if $right > $to;
+#         return 0;
 #
-#     Lines 305-307 (BEF left, 4-digit right via second /(\d{4})/ branch):
-#               left must have a 4-digit year for line 305 to match, but
-#               fast-path 1 would return for any differing pair.  When
-#               fast-path 1 ties, $1 < $ryear is always false.  Dead.
-#
-#     Line 337  ("return $start <=> $end" after prefix strip): fast-paths
-#               tie on the same year that the strip exposes, so start always
-#               equals end here.  Dead.
-#
-#     Line 372  ("if(ref($right)){ $right=$right->year() }" inside BET LHS
-#               range else-branch): Fix 2 rejects all ref($right) before
-#               this point.  Dead.
-#
-#     Lines 409-411 (second "if($right==$from){return 0}" in BET LHS range):
-#               the identical check at line 399 always executes first.  Dead.
-#
-#     Lines 420-426 (STDERR fallback at end of BET LHS range else-branch):
-#               lines 399/403/406/412 cover all integer relationships with
-#               [from,to], leaving nothing for the fallback.  Dead.
-#
-#     Lines 523-528 (STDERR fallback at end of BET RHS range else-branch):
-#               same reasoning; lines 506/510/513/516/519 cover everything.
-#               Dead.
-#
-#     Lines 561-562 (plain-left, DFG-fail right, year differs): fast-path 2
-#               returns for any pair where the trailing years differ, so
-#               $left (plain year) always equals $year when this branch is
-#               reached.  Dead.
-#
-#     Lines 578-579 (ref(left) && !ref(right) final guard): after the
-#               if(!ref($right)) block, $right is always set to $r[0] (a
-#               DateTime ref) at line 573, or the function has already
-#               returned.  !ref($right) is always false at line 578.  Dead.
+#     Smoke tests below verify the surrounding live code is unaffected.
 # =========================================================================
-subtest 'dead code inventory (documentation — all assertions pass trivially)' => sub {
-	pass 'Dead code documented above; no executable test possible for unreachable lines';
+subtest 'former dead-code inventory — removed; smoke tests verify live paths' => sub {
+	pass 'All 9 dead-code regions removed in critique refactor (2026-07-18)';
 
-	# Smoke test: the lines surrounding dead code still produce correct results.
+	# Verify the 3-line simplified range bodies still produce correct results.
 	is(datecmp('BET 1900 AND 1902', '1901'), $EQ,
-		'BET LHS range mid-year (exercises live code around lines 409-414)');
+		'BET LHS range: right inside [from, to] returns 0');
 	is(datecmp('1901', 'BET 1900 AND 1902'), $EQ,
-		'BET RHS range mid-year (exercises live code around lines 519-521)');
+		'BET RHS range: left inside [from, to] returns 0');
 };
 
 # =========================================================================

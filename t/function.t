@@ -22,8 +22,6 @@ use Test::Memory::Cycle;
 use Readonly;
 use File::Spec;
 
-use FindBin;
-
 use Date::Cmp qw(datecmp);
 
 # -------------------------------------------------------------------------

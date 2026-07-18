@@ -2,14 +2,16 @@
 
 requires 'perl', '5.008';
 
-requires 'autodie', '2.06';
 requires 'Carp';
 requires 'DateTime::Format::Genealogy', '0.11';
 requires 'ExtUtils::MakeMaker', '6.64';
+requires 'Readonly';
 requires 'Scalar::Util';
 requires 'Term::ANSIColor';
+requires 'autodie', '2.06';
 
 on 'test' => sub {
+	requires 'FindBin';
 	requires 'IPC::System::Simple';
 	requires 'Test::DescribeMe';
 	requires 'Test::Memory::Cycle';
