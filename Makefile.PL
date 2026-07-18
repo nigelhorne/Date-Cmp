@@ -17,11 +17,13 @@ WriteMakefile(
 	VERSION_FROM => 'lib/Date/Cmp.pm',	# Automatically fetch version from the module
 	ABSTRACT_FROM	=> 'lib/Date/Cmp.pm',
 	((defined($ExtUtils::MakeMaker::VERSION) && ($ExtUtils::MakeMaker::VERSION >= 6.3002))
-		? ('LICENSE'=> 'GPL')
+		? ('LICENSE'=> 'gpl')
 		: ()),
-	PREREQ_PM	=> {						# Dependencies (with versions)
+	CONFIGURE_REQUIRES => {
+		'ExtUtils::MakeMaker' => 6.64,	# Minimum version for TEST_REQUIRES support
+	},
+	PREREQ_PM	=> {						# Runtime dependencies (with minimum versions)
 		'autodie' => 2.06,
-		'ExtUtils::MakeMaker' => 6.64,	# Minimum version for TEST_REQUIRES
 		'Carp' => 0,
 		'DateTime::Format::Genealogy' => 0.11,
 		'Readonly' => 0,
@@ -30,6 +32,7 @@ WriteMakefile(
 	}, TEST_REQUIRES => {
 		'FindBin' => 0,
 		'IPC::System::Simple' => 0,
+		'Readonly' => 0,
 		'Test::DescribeMe' => 0,
 		'Test::Memory::Cycle' => 0,
 		'Test::Mockingbird' => 0,

@@ -16,17 +16,19 @@ use Term::ANSIColor;
 use Exporter qw(import);
 our @EXPORT_OK = qw(datecmp);
 
+=encoding utf-8
+
 =head1 NAME
 
 Date::Cmp - Compare two dates with approximate parsing support
 
 =head1 VERSION
 
-Version 0.05
+Version 0.06
 
 =cut
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 # Singleton DFG parser reused across calls for speed.  Tests may swap it
 # with a mock under "local $Date::Cmp::dfg = MockDFG->new()".
@@ -59,8 +61,6 @@ the most common year-only comparisons without invoking the heavier parser.
 =head1 FUNCTIONS
 
 =head2 datecmp
-
-=encoding utf-8
 
 =head3 Purpose
 
