@@ -11,6 +11,7 @@ Revision history for Date::Cmp
 	  path, which cannot parse a bare integer and died. Return the comparison
 	  immediately after the complain callback instead.
 	- More stringent validation
+	- Bumped minimum Test::Returns for https://www.cpantesters.org/cpan/report/271a9e76-9ff9-11f0-ac80-9a301de8b9fd
 
 	[ Enhancements ]
 	- Added test dashboard

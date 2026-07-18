@@ -18,7 +18,7 @@ on 'test' => sub {
 	requires 'Test::Mockingbird';
 	requires 'Test::Most';
 	requires 'Test::Needs';
-	requires 'Test::Returns';
+	requires 'Test::Returns', '0.03';
 	requires 'Test::Warnings';
 	requires 'Test::Without::Module';
 };
