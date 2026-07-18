@@ -2,6 +2,8 @@
 
 requires 'perl', '5.008';
 
+requires 'autodie', '2.06';
+requires 'Carp';
 requires 'DateTime::Format::Genealogy', '0.11';
 requires 'ExtUtils::MakeMaker', '6.64';
 requires 'Scalar::Util';

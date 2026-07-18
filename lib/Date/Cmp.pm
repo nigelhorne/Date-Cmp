@@ -6,6 +6,8 @@ package Date::Cmp;
 use strict;
 use warnings;
 
+use autodie 2.06 qw(:all);
+use Carp       qw(croak);
 use DateTime::Format::Genealogy 0.11;
 use Scalar::Util;
 use Term::ANSIColor;
@@ -171,9 +173,36 @@ stack traces are used to help identify parsing issues.
 
 =cut
 
+# Characters permitted in any date string accepted by datecmp.
+# Covers: digits, ASCII letters (month names, BET/AND/BEF/AFT/Abt/ca), space,
+# dot, comma, slash, dash, question mark, and colon (T-timestamp separator).
+# Used for full-string taint-scrubbing to prevent log injection and taint-mode
+# failures.
+use constant _DATE_CHARS => qr/[A-Za-z0-9 .,\/\-?:]/;
+
+# Truncate a user-supplied value to safe printable ASCII for diagnostic strings.
+# Caps at 200 chars and replaces non-printable bytes with '.', preventing log
+# injection (CWE-117) from newlines, nulls, or ANSI escape sequences.
+sub _sanitize_for_diag {
+	my ($val) = @_;
+	return '(undef)' unless defined $val;
+	my $safe = substr($val, 0, 200);
+	$safe =~ s/[^\x20-\x7E]/./g;
+	return $safe;
+}
+
 sub datecmp
 {
 	my ($left, $right, $complain) = @_;
+
+	# Reject truthy non-coderef third arguments before any call to $complain->(...).
+	# A falsy $complain (undef, 0, "") is never invoked due to the "if($complain)"
+	# guards below, so it is safe to skip validation for those.  A truthy non-CODE
+	# value would, under no strict refs, invoke an arbitrary named subroutine
+	# (e.g. $complain = 'DESTROY' calls DESTROY()), so we reject it early.
+	if($complain && ref($complain) ne 'CODE') {
+		croak 'Third argument to datecmp() must be a CODE reference';
+	}
 
 	if((!defined($left)) || !defined($right)) {
 		print STDERR "\n";
@@ -217,38 +246,60 @@ sub datecmp
 		return 0;
 	}
 	if(ref($left)) {
-		die 'Date parse failure: left is an unsupported reference type (' . ref($left) . ')';
+		croak 'Date parse failure: left is an unsupported reference type (' . ref($left) . ')';
 	}
 	if(ref($right)) {
-		die 'Date parse failure: right is an unsupported reference type (' . ref($right) . ')';
+		croak 'Date parse failure: right is an unsupported reference type (' . ref($right) . ')';
 	}
 
 	return 0 if($left eq $right);
 
+	# Taint-scrub: validate every character in both inputs before any use.
+	# A full-string anchored capture against the allowed character class (a)
+	# rejects strings containing shell metacharacters, newlines, null bytes,
+	# and HTML, and (b) produces an untainted copy, making the function safe
+	# under Perl's -T flag.  This replaces the former first-character check,
+	# which tested only the leading byte and could not untaint.
+	my $date_chars = _DATE_CHARS;
+	my ($safe_left)  = ($left  =~ /^(${date_chars}+)$/);
+	my ($safe_right) = ($right =~ /^(${date_chars}+)$/);
+
+	if(!defined($safe_left)) {
+		croak 'Date parse failure: left contains characters not permitted in a date string';
+	}
+	if(!defined($safe_right)) {
+		croak 'Date parse failure: right contains characters not permitted in a date string';
+	}
+
+	$left  = $safe_left;
+	$right = $safe_right;
+
+	# Semantic first-character check: all valid genealogy date strings start with
+	# a letter in the range A-S (month abbreviations Jan-Sep plus Oct=O, Nov=N,
+	# Dec=D; prefixes BEF, BET, AFT, Abt, ca) or a digit (year-first formats).
+	# Letters T-Z as the leading character do not appear in any supported format.
 	if($left !~ /^[A-S0-9]/i) {
-		print STDERR "\ninvalid left date: $left\n";
 		my $i = 0;
 		while((my @call_details = caller($i++))) {
 			print STDERR "\t", colored($call_details[2] . ' of ' . $call_details[1], 'red'), "\n";
 		}
-		die "Date parse failure: left = '$left'";
+		croak 'Date parse failure: left = ' . _sanitize_for_diag($left);
 	}
 	if($right !~ /^[A-S0-9]/i) {
-		print STDERR "\ninvalid right date: $right\n";
 		my $i = 0;
 		while((my @call_details = caller($i++))) {
 			print STDERR "\t", colored($call_details[2] . ' of ' . $call_details[1], 'red'), "\n";
 		}
-		die "Date parse failure: right = '$right'";
+		croak 'Date parse failure: right = ' . _sanitize_for_diag($right);
 	}
 
 	# Reject bare integers with 5+ digits — they are not valid year strings and
 	# the fast-path regexes would silently extract the wrong 4-digit substring.
 	if($left =~ /^\d{5,}$/) {
-		die "Date parse failure: left = '$left' (year must be 3-4 digits)";
+		croak 'Date parse failure: left = ' . $left . ' (year must be 3-4 digits)';
 	}
 	if($right =~ /^\d{5,}$/) {
-		die "Date parse failure: right = '$right' (year must be 3-4 digits)";
+		croak 'Date parse failure: right = ' . $right . ' (year must be 3-4 digits)';
 	}
 
 	if((!ref($left)) && (!ref($right)) && ($left =~ /\d{3,4}/) && ($right =~ /\d{3,4}/) && ($left !~ /^bet/i) && ($left !~ /\-/) && ($right !~ /^bet/i) && ($right !~ /^\d{3,4}\-\d{3,4}$/)) {
@@ -258,6 +309,7 @@ sub datecmp
 				my $ryear = $1;
 
 				if($lyear != $ryear) {
+					# Easy comparison for different years
 					return $lyear <=> $ryear;
 				}
 			}
@@ -309,7 +361,7 @@ sub datecmp
 					}
 				}
 			}
-			print STDERR "$left <=> $right: not handled yet\n";
+			print STDERR _sanitize_for_diag($left) . ' <=> ' . _sanitize_for_diag($right) . ": not handled yet\n";
 			my $i = 0;
 			while((my @call_details = caller($i++))) {
 				print STDERR "\t", colored($call_details[2] . ' of ' . $call_details[1], 'red'), "\n";
@@ -391,7 +443,7 @@ sub datecmp
 						while((my @call_details = caller($i++))) {
 							print STDERR "\t", colored($call_details[2] . ' of ' . $call_details[1], 'red'), "\n";
 						}
-						die "Date parse failure: right = '$right' ($left <=> $right)";
+						croak 'Date parse failure: right = ' . _sanitize_for_diag($right);
 					}
 					$right = $r[0]->year();
 				}
@@ -417,7 +469,7 @@ sub datecmp
 					# E.g. "BET 1830 AND 1832" <=> 1832
 					return 0;
 				}
-				print STDERR "datecmp(): Can't compare $left with $right\n";
+				print STDERR 'datecmp(): Can\'t compare ' . _sanitize_for_diag($left) . ' with ' . _sanitize_for_diag($right) . "\n";
 				my $i = 0;
 				while((my @call_details = caller($i++))) {
 					print STDERR "\t", colored($call_details[2] . ' of ' . $call_details[1], 'red'), "\n";
@@ -432,7 +484,7 @@ sub datecmp
 				while((my @call_details = caller($i++))) {
 					print STDERR "\t", colored($call_details[2] . ' of ' . $call_details[1], 'red'), "\n";
 				}
-				die "Date parse failure: left = '$left' ($left <=> $right)";
+				croak 'Date parse failure: left = ' . _sanitize_for_diag($left);
 			}
 
 			my @l = $dfg->parse_datetime({ date => $left, quiet => 1 });
@@ -442,7 +494,7 @@ sub datecmp
 				while((my @call_details = caller($i++))) {
 					print STDERR "\t", colored($call_details[2] . ' of ' . $call_details[1], 'red'), "\n";
 				}
-				die "Date parse failure: left = '$left' ($left <=> $right)";
+				croak 'Date parse failure: left = ' . _sanitize_for_diag($left);
 			}
 			$left = $rc;
 		}
@@ -455,7 +507,7 @@ sub datecmp
 					return $left <=> $1;
 				}
 			}
-			print STDERR "$left <=> $right: Before not handled\n";
+			print STDERR _sanitize_for_diag($left) . ' <=> ' . _sanitize_for_diag($right) . ": Before not handled\n";
 			my $i = 0;
 			while((my @call_details = caller($i++))) {
 				print STDERR "\t", colored($call_details[2] . ' of ' . $call_details[1], 'red'), "\n";
@@ -492,7 +544,7 @@ sub datecmp
 				}
 				return $left <=> $from;
 			} elsif($from > $to) {
-				print STDERR "datecmp(): $from > $to in daterange '$right'\n";
+				print STDERR 'datecmp(): ' . $from . ' > ' . $to . ' in daterange ' . _sanitize_for_diag($right) . "\n";
 				my $i = 0;
 				while((my @call_details = caller($i++))) {
 					print STDERR "\t", colored($call_details[2] . ' of ' . $call_details[1], 'red'), "\n";
@@ -520,7 +572,7 @@ sub datecmp
 					# E.g. 1901 <=> "BET 1900 AND 1902"
 					return 0;
 				}
-				print STDERR "datecmp(): Can't compare $left with $right\n";
+				print STDERR 'datecmp(): Can\'t compare ' . _sanitize_for_diag($left) . ' with ' . _sanitize_for_diag($right) . "\n";
 				my $i = 0;
 				while((my @call_details = caller($i++))) {
 					print STDERR "\t", colored($call_details[2] . ' of ' . $call_details[1], 'red'), "\n";
@@ -568,7 +620,7 @@ sub datecmp
 			while((my @call_details = caller($i++))) {
 				print STDERR "\t", colored($call_details[2] . ' of ' . $call_details[1], 'red'), "\n";
 			}
-			die "Date parse failure: right = '$right' ($left <=> $right)";
+			croak 'Date parse failure: right = ' . _sanitize_for_diag($right);
 		}
 		$right = $r[0];
 	}

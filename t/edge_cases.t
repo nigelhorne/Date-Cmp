@@ -344,28 +344,29 @@ subtest 'Unicode inputs are rejected at the char check' => sub {
 
 # ─────────────────────────────────────────────────────────────────────────────
 # §12  Non-coderef $complain callback
-# The POD specifies CodeRef; passing a non-ref or wrong ref type should die
-# only when the callback is actually INVOKED (guarded by "if($complain)").
+# The security fix validates $complain eagerly for truthy non-CODE values.
+# Falsy values (undef, 0) are still accepted — they can never be invoked
+# since every call site guards with "if($complain)".
 # ─────────────────────────────────────────────────────────────────────────────
-subtest 'non-coderef $complain — dies when invoked' => sub {
-	# Integer 42 — truthy, but not a CODE ref.  Under "strict refs", calling a
-	# plain scalar as a sub gives "Can't use string ... as a subroutine ref".
+subtest 'non-coderef $complain — dies when invalid' => sub {
+	# Integer 42 — truthy, not a CODE ref.  Eager validation fires before any
+	# range processing, reporting "CODE reference" in the error message.
 	throws_ok { datecmp('1900-1900', '1950', 42) }
-		qr/subroutine ref/i,
-		'integer $complain dies when range from==to triggers it';
+		qr/CODE reference/i,
+		'integer $complain dies at input validation';
 
-	# Arrayref — truthy, not callable; gives "Not a CODE reference"
+	# Arrayref — truthy, wrong ref type; same eager check fires.
 	throws_ok { datecmp('1900-1900', '1950', []) }
-		qr/Not a CODE reference/,
-		'arrayref $complain dies when triggered';
+		qr/CODE reference/i,
+		'arrayref $complain dies at input validation';
 
-	# Undef — the "if($complain)" guard means it is never invoked
+	# Undef — falsy, validation is skipped, never invoked
 	lives_ok { datecmp('1900-1900', '1950', undef) }
-		'undef $complain is safe — guard prevents call';
+		'undef $complain is safe — falsy skips validation and guard prevents call';
 
-	# 0 (false) — also never invoked
+	# 0 (false) — also falsy; validation skipped, never invoked
 	lives_ok { datecmp('1900-1900', '1950', 0) }
-		'false $complain is safe — guard prevents call';
+		'false $complain is safe — falsy skips validation and guard prevents call';
 
 	# Valid coderef — normal operation
 	my $called = 0;
@@ -437,13 +438,18 @@ subtest 'injection patterns are rejected or treated as data' => sub {
 	throws_ok { datecmp('; echo pwned', '1900') }
 		qr/Date parse failure/, 'semicolon prefix rejected';
 
-	# Injection after a valid year prefix — fast-path extracts year, no exec
-	my $r = datecmp('1900 ; system("ls")', '1901');
-	is($r, -1, 'injected system() call after year is data, not executed');
+	# Injection after a valid year prefix — the taint-scrubbing charset rejects
+	# ';', '(', ')', '"' which appear in the injection payload, so this now
+	# dies at the charset check rather than being silently extracted as year 1900.
+	throws_ok { datecmp('1900 ; system("ls")', '1901') }
+		qr/Date parse failure/,
+		'injected system() call rejected at charset check';
 
-	# Perl string interpolation attempt (no eval → inert)
-	my $r2 = datecmp('1900 ${\ die "injected" }', '1901');
-	is($r2, -1, 'Perl interpolation in string is data, not evaluated');
+	# Perl string interpolation attempt — '$', '{', '\', '}' not in allowed
+	# charset; rejected before any evaluation can occur.
+	throws_ok { datecmp('1900 ${\ die "injected" }', '1901') }
+		qr/Date parse failure/,
+		'Perl interpolation attempt rejected at charset check';
 
 	diag 'injection tests confirm no eval on user input' if $ENV{TEST_VERBOSE};
 };

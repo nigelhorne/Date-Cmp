@@ -20,7 +20,9 @@ WriteMakefile(
 		? ('LICENSE'=> 'GPL')
 		: ()),
 	PREREQ_PM	=> {						# Dependencies (with versions)
+		'autodie' => 2.06,
 		'ExtUtils::MakeMaker' => 6.64,	# Minimum version for TEST_REQUIRES
+		'Carp' => 0,
 		'DateTime::Format::Genealogy' => 0.11,
 		'Scalar::Util' => 0,
 		'Term::ANSIColor' => 0
