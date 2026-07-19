@@ -45,10 +45,11 @@ mock 'Term::ANSIColor::colored' => sub { $_[0] };
 # Re-raises any exception after restoring the filehandle.
 # -------------------------------------------------------------------------
 sub silence_stderr (&) {
-	my ($code) = @_;
+	my $code = $_[0];
+
 	my $devnull = File::Spec->devnull();
 	open(my $saved, '>&', \*STDERR) or die "dup STDERR: $!";
-	open(STDERR, '>', $devnull)     or die "redirect STDERR: $!";
+	open(STDERR, '>', $devnull) or die "redirect STDERR: $!";
 	my ($result, $err);
 	eval { $result = $code->() };
 	$err = $@;

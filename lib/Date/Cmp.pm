@@ -7,7 +7,7 @@ use strict;
 use warnings;
 
 use autodie 2.06 qw(:all);
-use Carp       qw(croak);
+use Carp qw(croak);
 use DateTime::Format::Genealogy 0.11;
 use Readonly;
 use Scalar::Util qw(blessed);
@@ -15,6 +15,19 @@ use Term::ANSIColor;
 
 use Exporter qw(import);
 our @EXPORT_OK = qw(datecmp);
+
+# Characters permitted in any date string.
+# Covers every character that appears in a supported genealogy date:
+#   A-Za-z  — month abbreviations; BEF/BET/AFT/AND/Abt/ca prefixes
+#   0-9     — year and day digits
+#   (space) — component separator
+#   .       — Abt. prefix dot
+#   ,       — occasional list separator
+#   /       — slash-dates (M/D/YYYY) and month ranges (Oct/Nov/Dec)
+#   -       — ISO dates (YYYY-MM-DD) and year ranges (1830-1832)
+#   ?       — uncertainty suffix ("1828 ?")
+#   :       — ISO T-timestamp ("1941-08-02T00:00:00")
+Readonly my $DATE_CHARS => qr/[A-Ya-y0-9 .,\/\-?:]/;	# No month contains Z
 
 =encoding utf-8
 
@@ -342,59 +355,6 @@ declared as a dependency.
 =back
 
 =cut
-
-# ─────────────────────────────────────────────────────────────────────────────
-# Constant: characters permitted in any date string.
-#
-# Covers every character that appears in a supported genealogy date:
-#   A-Za-z  — month abbreviations; BEF/BET/AFT/AND/Abt/ca prefixes
-#   0-9     — year and day digits
-#   (space) — component separator
-#   .       — Abt. prefix dot
-#   ,       — occasional list separator
-#   /       — slash-dates (M/D/YYYY) and month ranges (Oct/Nov/Dec)
-#   -       — ISO dates (YYYY-MM-DD) and year ranges (1830-1832)
-#   ?       — uncertainty suffix ("1828 ?")
-#   :       — ISO T-timestamp ("1941-08-02T00:00:00")
-# ─────────────────────────────────────────────────────────────────────────────
-Readonly my $DATE_CHARS => qr/[A-Za-z0-9 .,\/\-?:]/;
-
-# ─────────────────────────────────────────────────────────────────────────────
-# _sanitize_for_diag($val)
-#
-# Purpose:      Produce a safe printable-ASCII rendering of a user-supplied
-#               string for inclusion in log/error output.  Prevents log
-#               injection (CWE-117) via embedded newlines, NUL bytes, or ANSI
-#               escape sequences.
-# Entry:        $val — any scalar; may be undef.
-# Exit:         Defined printable string ≤200 chars.  '(undef)' if input is
-#               undef.  Non-printable bytes (outside \x20–\x7E) replaced with
-#               literal periods.
-# ─────────────────────────────────────────────────────────────────────────────
-sub _sanitize_for_diag {
-	my ($val) = @_;
-	return '(undef)' if !defined $val;
-	(my $safe = substr($val, 0, 200)) =~ s/[^\x20-\x7E]/./g;
-	return $safe;
-}
-
-# ─────────────────────────────────────────────────────────────────────────────
-# _emit_stack_trace()
-#
-# Purpose:      Write a coloured call-stack listing to STDERR so that the
-#               caller can locate which line of their code triggered a
-#               datecmp warning or failure.
-# Entry:        Called at any depth inside datecmp.
-# Exit:         Nothing returned (void).
-# Side Effects: Writes tab-indented, red-coloured lines to STDERR.
-# ─────────────────────────────────────────────────────────────────────────────
-sub _emit_stack_trace {
-	my $i = 0;
-	while(my @c = caller($i++)) {
-		print STDERR "\t", colored($c[2] . ' of ' . $c[1], 'red'), "\n";
-	}
-	return;
-}
 
 sub datecmp
 {
@@ -751,6 +711,43 @@ sub datecmp
 	return $left  <=> $right->year() if !ref($left)  && ref($right);
 	return $left->year() <=> $right  if  ref($left)  && !ref($right);
 	return $left <=> $right;
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# _sanitize_for_diag($val)
+#
+# Purpose:      Produce a safe printable-ASCII rendering of a user-supplied
+#               string for inclusion in log/error output.  Prevents log
+#               injection (CWE-117) via embedded newlines, NUL bytes, or ANSI
+#               escape sequences.
+# Entry:        $val — any scalar; may be undef.
+# Exit:         Defined printable string ≤200 chars.  '(undef)' if input is
+#               undef.  Non-printable bytes (outside \x20–\x7E) replaced with
+#               literal periods.
+# ─────────────────────────────────────────────────────────────────────────────
+sub _sanitize_for_diag {
+	my ($val) = @_;
+	return '(undef)' if !defined $val;
+	(my $safe = substr($val, 0, 200)) =~ s/[^\x20-\x7E]/./g;
+	return $safe;
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# _emit_stack_trace()
+#
+# Purpose:      Write a coloured call-stack listing to STDERR so that the
+#               caller can locate which line of their code triggered a
+#               datecmp warning or failure.
+# Entry:        Called at any depth inside datecmp.
+# Exit:         Nothing returned (void).
+# Side Effects: Writes tab-indented, red-coloured lines to STDERR.
+# ─────────────────────────────────────────────────────────────────────────────
+sub _emit_stack_trace {
+	my $i = 0;
+	while(my @c = caller($i++)) {
+		print STDERR "\t", colored($c[2] . ' of ' . $c[1], 'red'), "\n";
+	}
+	return;
 }
 
 =head1 AUTHOR
