@@ -25,98 +25,98 @@ https://pjcj.net
 <div><br/></div>
 <table>
 <tr><th>line</th><th>%</th><th colspan="2">coverage</th><th>branch</th></tr>
-<tr><td class="h"><a id="L376">376</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">unless defined $val</td></tr>
-<tr><td class="h"><a id="L408">408</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($complain and ref $complain ne &quot;CODE&quot;)</td></tr>
-<tr><td class="h"><a id="L413">413</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless (defined $left and defined $right)</td></tr>
-<tr><td class="h"><a id="L415">415</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless defined $left</td></tr>
-<tr><td class="h"><a id="L416">416</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless defined $right</td></tr>
-<tr><td class="h"><a id="L422">422</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (&amp;blessed($left) and $left-&gt;can(&quot;date&quot;))</td></tr>
-<tr><td class="h"><a id="L423">423</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (&amp;blessed($right) and $right-&gt;can(&quot;date&quot;))</td></tr>
-<tr><td class="h"><a id="L424">424</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (ref $left eq &quot;HASH&quot;)</td></tr>
-<tr><td class="h"><a id="L425">425</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (ref $right eq &quot;HASH&quot;)</td></tr>
-<tr><td class="h"><a id="L429">429</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless (defined $left and defined $right)</td></tr>
-<tr><td class="h"><a id="L431">431</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless defined $left</td></tr>
-<tr><td class="h"><a id="L432">432</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless defined $right</td></tr>
-<tr><td class="h"><a id="L436">436</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (ref $left)</td></tr>
-<tr><td class="h"><a id="L439">439</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (ref $right)</td></tr>
-<tr><td class="h"><a id="L444">444</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $left eq $right</td></tr>
-<tr><td class="h"><a id="L453">453</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless (defined $safe_left)</td></tr>
-<tr><td class="h"><a id="L456">456</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless (defined $safe_right)</td></tr>
-<tr><td class="h"><a id="L467">467</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless ($left =~ /^[A-S0-9]/i)</td></tr>
-<tr><td class="h"><a id="L471">471</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless ($right =~ /^[A-S0-9]/i)</td></tr>
-<tr><td class="h"><a id="L478">478</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($left =~ /^\d{5,}$/)</td></tr>
-<tr><td class="h"><a id="L481">481</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($right =~ /^\d{5,}$/)</td></tr>
-<tr><td class="h"><a id="L488">488</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (not ref $left || ref $right and $left =~ /\d{3,4}/ and $right =~ /\d{3,4}/ and not $left =~ /^bet/i and not $left =~ /\-/ and not $right =~ /^bet/i and not $right =~ /^\d{3,4}\-\d{3,4}$/)</td></tr>
-<tr><td class="h"><a id="L493">493</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($left =~ /(\d{4})/)</td></tr>
-<tr><td class="h"><a id="L495">495</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if ($right =~ /(\d{4})/)</td></tr>
-<tr><td class="h"><a id="L497">497</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $lyear != $ryear</td></tr>
-<tr><td class="h"><a id="L504">504</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (not ref $left || ref $right and $left =~ /(\d{3,4})$/ and not $left =~ /^bet/i and not $left =~ /\-/ and not $right =~ /^bet/i and not $right =~ /\-/)</td></tr>
-<tr><td class="h"><a id="L509">509</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($right =~ /(\d{3,4})$/)</td></tr>
-<tr><td class="h"><a id="L511">511</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $yol != $yor</td></tr>
-<tr><td class="h"><a id="L515">515</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">unless (ref $left)</td></tr>
-<tr><td class="h"><a id="L524">524</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (not ref $right and $left =~ m[(^|[\s/])\d{4}$] and not $left =~ /^bet/i and not $left =~ /\-/ and not $right =~ /^bet/i and not $right =~ /\-/ and $right =~ m[(^|[\s/,])(\d{4})$])</td></tr>
-<tr><td class="h"><a id="L533">533</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if $lyear != $ryear</td></tr>
-<tr><td class="h"><a id="L537">537</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($left =~ /^(bef|aft)/i)</td></tr>
-<tr><td class="h"><a id="L538">538</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($right =~ /^\d+$/)</td></tr>
-<tr><td class="h"><a id="L540">540</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if ($left =~ /\s(\d+)$/)</td></tr>
-<tr><td class="h"><a id="L541">541</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if $1 &lt; $right</td></tr>
-<tr><td class="h"><a id="L544">544</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if ($right =~ /(\d{4})/)</td></tr>
-<tr><td class="h"><a id="L547">547</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($left =~ /^bef/i and $left =~ /(\d{4})/)</td></tr>
-<tr><td class="h"><a id="L548">548</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if $1 &lt; $ryear</td></tr>
-<tr><td class="h"><a id="L557">557</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($left =~ /^(Abt|ca?)\.?\s+(.+)/i) { }</td></tr>
+<tr><td class="h"><a id="L368">368</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($complain and ref $complain ne &quot;CODE&quot;)</td></tr>
+<tr><td class="h"><a id="L373">373</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless (defined $left and defined $right)</td></tr>
+<tr><td class="h"><a id="L375">375</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless defined $left</td></tr>
+<tr><td class="h"><a id="L376">376</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless defined $right</td></tr>
+<tr><td class="h"><a id="L382">382</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (&amp;blessed($left) and $left-&gt;can(&quot;date&quot;))</td></tr>
+<tr><td class="h"><a id="L383">383</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (&amp;blessed($right) and $right-&gt;can(&quot;date&quot;))</td></tr>
+<tr><td class="h"><a id="L384">384</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (ref $left eq &quot;HASH&quot;)</td></tr>
+<tr><td class="h"><a id="L385">385</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (ref $right eq &quot;HASH&quot;)</td></tr>
+<tr><td class="h"><a id="L389">389</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless (defined $left and defined $right)</td></tr>
+<tr><td class="h"><a id="L391">391</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless defined $left</td></tr>
+<tr><td class="h"><a id="L392">392</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless defined $right</td></tr>
+<tr><td class="h"><a id="L396">396</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (ref $left)</td></tr>
+<tr><td class="h"><a id="L399">399</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (ref $right)</td></tr>
+<tr><td class="h"><a id="L404">404</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $left eq $right</td></tr>
+<tr><td class="h"><a id="L413">413</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless (defined $safe_left)</td></tr>
+<tr><td class="h"><a id="L416">416</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless (defined $safe_right)</td></tr>
+<tr><td class="h"><a id="L427">427</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless ($left =~ /^[A-S0-9]/i)</td></tr>
+<tr><td class="h"><a id="L431">431</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless ($right =~ /^[A-S0-9]/i)</td></tr>
+<tr><td class="h"><a id="L438">438</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($left =~ /^\d{5,}$/)</td></tr>
+<tr><td class="h"><a id="L441">441</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($right =~ /^\d{5,}$/)</td></tr>
+<tr><td class="h"><a id="L448">448</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (not ref $left || ref $right and $left =~ /\d{3,4}/ and $right =~ /\d{3,4}/ and not $left =~ /^bet/i and not $left =~ /\-/ and not $right =~ /^bet/i and not $right =~ /^\d{3,4}\-\d{3,4}$/)</td></tr>
+<tr><td class="h"><a id="L453">453</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($left =~ /(\d{4})/)</td></tr>
+<tr><td class="h"><a id="L455">455</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if ($right =~ /(\d{4})/)</td></tr>
+<tr><td class="h"><a id="L457">457</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $lyear != $ryear</td></tr>
+<tr><td class="h"><a id="L464">464</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (not ref $left || ref $right and $left =~ /(\d{3,4})$/ and not $left =~ /^bet/i and not $left =~ /\-/ and not $right =~ /^bet/i and not $right =~ /\-/)</td></tr>
+<tr><td class="h"><a id="L469">469</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($right =~ /(\d{3,4})$/)</td></tr>
+<tr><td class="h"><a id="L471">471</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $yol != $yor</td></tr>
+<tr><td class="h"><a id="L475">475</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">unless (ref $left)</td></tr>
+<tr><td class="h"><a id="L484">484</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (not ref $right and $left =~ m[(^|[\s/])\d{4}$] and not $left =~ /^bet/i and not $left =~ /\-/ and not $right =~ /^bet/i and not $right =~ /\-/ and $right =~ m[(^|[\s/,])(\d{4})$])</td></tr>
+<tr><td class="h"><a id="L493">493</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if $lyear != $ryear</td></tr>
+<tr><td class="h"><a id="L497">497</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($left =~ /^(bef|aft)/i)</td></tr>
+<tr><td class="h"><a id="L498">498</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($right =~ /^\d+$/)</td></tr>
+<tr><td class="h"><a id="L500">500</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if ($left =~ /\s(\d+)$/)</td></tr>
+<tr><td class="h"><a id="L501">501</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if $1 &lt; $right</td></tr>
+<tr><td class="h"><a id="L504">504</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if ($right =~ /(\d{4})/)</td></tr>
+<tr><td class="h"><a id="L507">507</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ($left =~ /^bef/i and $left =~ /(\d{4})/)</td></tr>
+<tr><td class="h"><a id="L508">508</a></td><td class="c0">0</td><td class="c0">T</td><td class="c0">F</td><td class="s">if $1 &lt; $ryear</td></tr>
+<tr><td class="h"><a id="L517">517</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($left =~ /^(Abt|ca?)\.?\s+(.+)/i) { }</td></tr>
 <tr><td class="h"></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">elsif ($left =~ /(.+?)\s?\?$/) { }</td></tr>
 <tr><td class="h"></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">elsif ($left =~ m[/] and $left =~ m[^[a-z/]+\s+(.+)]i) { }</td></tr>
-<tr><td class="h"><a id="L568">568</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($left =~ /^\d{3,4}/ and not $left =~ /\-/ and $right =~ /^\d{3,4}/ and not $right =~ /\-/)</td></tr>
-<tr><td class="h"><a id="L573">573</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if $start != $end</td></tr>
-<tr><td class="h"><a id="L580">580</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($left =~ /(\d{3,4})/)</td></tr>
-<tr><td class="h"><a id="L582">582</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (not $left =~ /^bet/i and $right =~ /^bet/)</td></tr>
-<tr><td class="h"><a id="L583">583</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if ($right =~ /(\d{3,4})/)</td></tr>
-<tr><td class="h"><a id="L585">585</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if $start != $end</td></tr>
-<tr><td class="h"><a id="L591">591</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($left =~ /^(\d{3,4})\sor\s(\d{3,4})$/) { }</td></tr>
+<tr><td class="h"><a id="L528">528</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($left =~ /^\d{3,4}/ and not $left =~ /\-/ and $right =~ /^\d{3,4}/ and not $right =~ /\-/)</td></tr>
+<tr><td class="h"><a id="L533">533</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if $start != $end</td></tr>
+<tr><td class="h"><a id="L540">540</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($left =~ /(\d{3,4})/)</td></tr>
+<tr><td class="h"><a id="L542">542</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (not $left =~ /^bet/i and $right =~ /^bet/)</td></tr>
+<tr><td class="h"><a id="L543">543</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if ($right =~ /(\d{3,4})/)</td></tr>
+<tr><td class="h"><a id="L545">545</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if $start != $end</td></tr>
+<tr><td class="h"><a id="L551">551</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($left =~ /^(\d{3,4})\sor\s(\d{3,4})$/) { }</td></tr>
 <tr><td class="h"></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">elsif ($left =~ /^(\d{3,4})\-(\d{3,4})$/ or $left =~ /^Bet (\d{3,4})\sand\s(\d{3,4})$/i) { }</td></tr>
 <tr><td class="h"></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">elsif (not $left =~ /^\d{3,4}$/) { }</td></tr>
-<tr><td class="h"><a id="L593">593</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $complain and $start == $end</td></tr>
-<tr><td class="h"><a id="L602">602</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($from == $to) { }</td></tr>
+<tr><td class="h"><a id="L553">553</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $complain and $start == $end</td></tr>
+<tr><td class="h"><a id="L562">562</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($from == $to) { }</td></tr>
 <tr><td class="h"></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">elsif ($from &gt; $to) { }</td></tr>
-<tr><td class="h"><a id="L604">604</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $complain</td></tr>
-<tr><td class="h"><a id="L609">609</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if $complain</td></tr>
-<tr><td class="h"><a id="L614">614</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless ($right =~ /^\d{4}$/)</td></tr>
-<tr><td class="h"><a id="L616">616</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless (defined $r[0])</td></tr>
-<tr><td class="h"><a id="L617">617</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($right =~ m[[\s/](\d{4})$])</td></tr>
-<tr><td class="h"><a id="L621">621</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">$year &gt; $to ? :</td></tr>
+<tr><td class="h"><a id="L564">564</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $complain</td></tr>
+<tr><td class="h"><a id="L569">569</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if $complain</td></tr>
+<tr><td class="h"><a id="L574">574</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless ($right =~ /^\d{4}$/)</td></tr>
+<tr><td class="h"><a id="L576">576</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless (defined $r[0])</td></tr>
+<tr><td class="h"><a id="L577">577</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($right =~ m[[\s/](\d{4})$])</td></tr>
+<tr><td class="h"><a id="L581">581</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">$year &gt; $to ? :</td></tr>
 <tr><td class="h"></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">$year &lt; $from ? :</td></tr>
-<tr><td class="h"><a id="L634">634</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $right &lt; $from</td></tr>
-<tr><td class="h"><a id="L635">635</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $right &gt; $to</td></tr>
-<tr><td class="h"><a id="L641">641</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless ($left =~ /^\d{4}\-\d{2}\-\d{2}$/)</td></tr>
-<tr><td class="h"><a id="L643">643</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (not $left =~ /[a-z]/i or $left =~ /[a-z]$/)</td></tr>
-<tr><td class="h"><a id="L654">654</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless (defined $rc)</td></tr>
-<tr><td class="h"><a id="L663">663</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">unless (ref $right)</td></tr>
-<tr><td class="h"><a id="L665">665</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($right =~ /^bef/i)</td></tr>
-<tr><td class="h"><a id="L666">666</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($left =~ /^\d+$/)</td></tr>
-<tr><td class="h"><a id="L668">668</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if ($right =~ /\s(\d+)$/)</td></tr>
-<tr><td class="h"><a id="L678">678</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($right =~ /^(Abt|ca?)\.?\s+(.+)/i) { }</td></tr>
+<tr><td class="h"><a id="L594">594</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $right &lt; $from</td></tr>
+<tr><td class="h"><a id="L595">595</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $right &gt; $to</td></tr>
+<tr><td class="h"><a id="L601">601</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless ($left =~ /^\d{4}\-\d{2}\-\d{2}$/)</td></tr>
+<tr><td class="h"><a id="L603">603</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (not $left =~ /[a-z]/i or $left =~ /[a-z]$/)</td></tr>
+<tr><td class="h"><a id="L614">614</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless (defined $rc)</td></tr>
+<tr><td class="h"><a id="L623">623</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">unless (ref $right)</td></tr>
+<tr><td class="h"><a id="L625">625</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($right =~ /^bef/i)</td></tr>
+<tr><td class="h"><a id="L626">626</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($left =~ /^\d+$/)</td></tr>
+<tr><td class="h"><a id="L628">628</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if ($right =~ /\s(\d+)$/)</td></tr>
+<tr><td class="h"><a id="L638">638</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($right =~ /^(Abt|ca?)\.?\s+(.+)/i) { }</td></tr>
 <tr><td class="h"></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">elsif ($right =~ /(.+?)\s?\?$/) { }</td></tr>
 <tr><td class="h"></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">elsif ($right =~ m[/] and $right =~ m[^[a-z/]+\s+(.+)]i) { }</td></tr>
-<tr><td class="h"><a id="L687">687</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($right =~ /^\d{3,4}$/)</td></tr>
-<tr><td class="h"><a id="L688">688</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">ref $left ? :</td></tr>
-<tr><td class="h"><a id="L692">692</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($right =~ /^(\d{3,4})\-(\d{3,4})$/ or $right =~ /^Bet (\d{3,4})\sand\s(\d{3,4})$/i)</td></tr>
-<tr><td class="h"><a id="L697">697</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($from == $to) { }</td></tr>
+<tr><td class="h"><a id="L647">647</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($right =~ /^\d{3,4}$/)</td></tr>
+<tr><td class="h"><a id="L648">648</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">ref $left ? :</td></tr>
+<tr><td class="h"><a id="L652">652</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($right =~ /^(\d{3,4})\-(\d{3,4})$/ or $right =~ /^Bet (\d{3,4})\sand\s(\d{3,4})$/i)</td></tr>
+<tr><td class="h"><a id="L657">657</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($from == $to) { }</td></tr>
 <tr><td class="h"></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">elsif ($from &gt; $to) { }</td></tr>
-<tr><td class="h"><a id="L699">699</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $complain</td></tr>
-<tr><td class="h"><a id="L702">702</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">ref $left ? :</td></tr>
-<tr><td class="h"><a id="L711">711</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (ref $left)</td></tr>
-<tr><td class="h"><a id="L714">714</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $left &lt; $from</td></tr>
-<tr><td class="h"><a id="L715">715</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $left &gt; $to</td></tr>
-<tr><td class="h"><a id="L722">722</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if ($left =~ /(\d{3,4})/)</td></tr>
-<tr><td class="h"><a id="L724">724</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($right =~ /(\d{3,4})/)</td></tr>
-<tr><td class="h"><a id="L726">726</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $start != $end</td></tr>
-<tr><td class="h"><a id="L732">732</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless (defined $r[0])</td></tr>
-<tr><td class="h"><a id="L733">733</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($right =~ m[[\s/](\d{4})$])</td></tr>
-<tr><td class="h"><a id="L736">736</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (ref $left) { }</td></tr>
-<tr><td class="h"><a id="L737">737</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if $left-&gt;year != $year</td></tr>
-<tr><td class="h"><a id="L739">739</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if $left != $year</td></tr>
-<tr><td class="h"><a id="L751">751</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if not ref $left and ref $right</td></tr>
-<tr><td class="h"><a id="L752">752</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ref $left and not ref $right</td></tr>
+<tr><td class="h"><a id="L659">659</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $complain</td></tr>
+<tr><td class="h"><a id="L662">662</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">ref $left ? :</td></tr>
+<tr><td class="h"><a id="L671">671</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (ref $left)</td></tr>
+<tr><td class="h"><a id="L674">674</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $left &lt; $from</td></tr>
+<tr><td class="h"><a id="L675">675</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $left &gt; $to</td></tr>
+<tr><td class="h"><a id="L682">682</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if ($left =~ /(\d{3,4})/)</td></tr>
+<tr><td class="h"><a id="L684">684</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($right =~ /(\d{3,4})/)</td></tr>
+<tr><td class="h"><a id="L686">686</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if $start != $end</td></tr>
+<tr><td class="h"><a id="L692">692</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">unless (defined $r[0])</td></tr>
+<tr><td class="h"><a id="L693">693</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if ($right =~ m[[\s/](\d{4})$])</td></tr>
+<tr><td class="h"><a id="L696">696</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if (ref $left) { }</td></tr>
+<tr><td class="h"><a id="L697">697</a></td><td class="c0">50</td><td class="c3">T</td><td class="c0">F</td><td class="s">if $left-&gt;year != $year</td></tr>
+<tr><td class="h"><a id="L699">699</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if $left != $year</td></tr>
+<tr><td class="h"><a id="L711">711</a></td><td class="c3">100</td><td class="c3">T</td><td class="c3">F</td><td class="s">if not ref $left and ref $right</td></tr>
+<tr><td class="h"><a id="L712">712</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">if ref $left and not ref $right</td></tr>
+<tr><td class="h"><a id="L730">730</a></td><td class="c0">50</td><td class="c0">T</td><td class="c3">F</td><td class="s">unless defined $val</td></tr>
 </table>
 </body>
 </html>
