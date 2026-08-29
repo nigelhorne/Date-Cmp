@@ -23,7 +23,11 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           fetch-depth: 0
+<<<<<<< HEAD
       - uses: shogo82148/actions-setup-perl@v1.43.1
+=======
+      - uses: shogo82148/actions-setup-perl@v1.42.0
+>>>>>>> 391f33934a44b00cfd6529f68638ab2e2a64c676
 
       - run: cpanm --verbose --skip-satisfied --installdeps .
       - run: prove -l t/
